@@ -107,6 +107,19 @@ export class StreamedMessages {
 
   messageIndex: number = 0
   interactionIndex: number = 0
+  
+  add( part: ChatPart){
+    add(this,part)
+  }
+  next( ){
+    return next(this)
+  }
+  hasNextAudioNText(){
+    return hasNextAudioNText(this)
+  }
+  _next(incrementCounter: boolean, _startIndex?: number){
+    return _next(this,incrementCounter,_startIndex)
+  }
 }
 
 export function resetMessages(message: StreamedMessages): void {
@@ -175,7 +188,7 @@ function hasNextAudioNText(message: StreamedMessages, _startIndex?: number): boo
   return hasNext
 }
 
-function next(message: StreamedMessages): ChatNext {
+export function next(message: StreamedMessages): ChatNext {
   return _next(message, true)
 }
 //fixme this is hacky, need a better way to organized streamed data and keep updating scene in real time

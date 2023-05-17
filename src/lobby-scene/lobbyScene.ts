@@ -68,7 +68,7 @@ function initArena(host: LobbyScene, force: boolean) {
   joinOrCreateRoomAsync(roomName, connectOptions)
 }
 
-function onConnectHost(host: LobbyScene, room: Room<NpcGameRoomState>) {
+export function onConnectHost(host: LobbyScene, room: Room<NpcGameRoomState>) {
   GAME_STATE.gameRoom = room;
 
   if (host.pendingConvoWithNPC) {
@@ -81,7 +81,7 @@ function onConnectHost(host: LobbyScene, room: Room<NpcGameRoomState>) {
   }
 }
 
-function disconnectHost(host: LobbyScene){
+export function disconnectHost(host: LobbyScene){
   const METHOD_NAME = "endBattle"
   console.log(METHOD_NAME,"ENTRY")
   disconnect(true)
