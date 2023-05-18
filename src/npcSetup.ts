@@ -6,6 +6,7 @@ import { closeAllInteractions } from './utils/connectedUtils'
 import { FollowPathData } from 'dcl-npc-toolkit/dist/types'
 import { Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
+import { MeshRenderer, Transform, engine } from '@dcl/sdk/ecs'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -27,15 +28,16 @@ let npcBluntBobby: RemoteNpc
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  const offsetpath = 2.5
+  const offsetpath = 5
+  let dogePathPoints = [
+    Vector3.create(offsetpath, .24, offsetpath),
+    Vector3.create(offsetpath, .24, 16 - offsetpath),
+    Vector3.create(16 - offsetpath, .24, 16 - offsetpath),
+    Vector3.create(16 - offsetpath, .24, offsetpath)
+  ]
   let dogePath: FollowPathData = {
-    path: [
-      Vector3.create(offsetpath, .24, offsetpath),
-      Vector3.create(offsetpath, .24, 16 - offsetpath),
-      Vector3.create(16 - offsetpath, .24, 16 - offsetpath),
-      Vector3.create(16 - offsetpath, .24, offsetpath)
-    ],
-    totalDuration: 1.5,
+    path: dogePathPoints,
+    totalDuration: dogePathPoints.length * 6,
     loop: true,
     // curve: true,
   }
@@ -43,7 +45,11 @@ export function setupNPC() {
   doge = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/doge" },
     {
-      transformData: { position: Vector3.clone(dogePath.path[0]), scale: Vector3.create(2, 2, 2) },
+      transformData:
+      { 
+        position: Vector3.clone(dogePath.path[0]),
+        scale: Vector3.create(2, 2, 2)
+      },
       npcData: {
         type: npcLib.NPCType.CUSTOM,
         model: 'models/dogeNPC_anim4.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
@@ -62,19 +68,18 @@ export function setupNPC() {
 
           if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
           npcLib.followPath(doge.entity, dogePath)
-          //doge.npc.followPath()
           const NO_LOOP = true
           //if(doge.npcAnimations.WAVE) doge.npc.playAnimation(doge.npcAnimations.WAVE.name, NO_LOOP,doge.npcAnimations.WAVE.duration)
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
         faceUser: true,//continue to face user???
-        portrait:
-        {
-          path: 'images/portraits/doge.png', height: 300, width: 300
-          , offsetX: -10, offsetY: 0
-          , section: { sourceHeight: 256, sourceWidth: 256 }
-        },
+        //portrait:
+        //{
+        //  path: 'images/portraits/doge.png', height: 300, width: 300
+        //  , offsetX: -10, offsetY: 0
+        //  , section: { sourceHeight: 256, sourceWidth: 256 }
+        //},
         darkUI: true,
         coolDownDuration: 3,
         hoverText: 'WOW',
@@ -104,7 +109,7 @@ export function setupNPC() {
         //showInputOverlay(true)
         const LOOP = false
         if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
-        npcLib.followPath(doge.entity, dogePath)
+        //npcLib.followPath(doge.entity, dogePath)
       }
     }
   )
@@ -120,8 +125,10 @@ export function setupNPC() {
         type: npcLib.NPCType.CUSTOM,
         model: 'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
+          /*
           console.log('dclGuide.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
+          */
           return
           REGISTRY.activeNPC = dclGuide
           closeAllInteractions({ exclude: REGISTRY.activeNPC })
@@ -139,12 +146,12 @@ export function setupNPC() {
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
         faceUser: true,//continue to face user???
-        portrait:
-        {
-          path: 'images/portraits/marsha.png', height: 300, width: 300
-          , offsetX: -10, offsetY: 0
-          , section: { sourceHeight: 384, sourceWidth: 384 }
-        },
+        //portrait:
+        //{
+        //  path: 'images/portraits/marsha.png', height: 300, width: 300
+        //  , offsetX: -10, offsetY: 0
+        //  , section: { sourceHeight: 384, sourceWidth: 384 }
+        //},
         darkUI: true,
         coolDownDuration: 3,
         hoverText: 'Talk',

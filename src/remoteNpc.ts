@@ -189,3 +189,13 @@ export function endInteraction(npc: RemoteNpc) {
   cancelThinking(npc)
   if (npc.onEndOfInteraction) npc.onEndOfInteraction()
 }
+
+export function endOfRemoteInteractionStream(npc: RemoteNpc) {
+  console.log("NPC.endOfRemoteInteractionStream","ENTRY",npc.name)
+  if(npc.onEndOfRemoteInteractionStream) npc.onEndOfRemoteInteractionStream()
+}
+
+export function goodBye(npc: RemoteNpc){
+  console.log("NPC.goodbye","ENTRY",npc.name)
+  npcLib.handleWalkAway(npc.entity)
+}

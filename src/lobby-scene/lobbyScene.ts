@@ -1,6 +1,5 @@
 import { REGISTRY } from "../registry";
 import { RemoteNpc, startThinking } from "../remoteNpc";
-import { resetMessages, streamedMsgs } from "../streamdMessages";
 import { GAME_STATE } from "../state";
 import { ChatMessage, NpcRoomDataOptions } from "../connection/state/server-state-spec";
 import { createMessageObject, sendMsgToAI } from "../utils/connectedUtils";
@@ -8,6 +7,7 @@ import { joinOrCreateRoomAsync } from "../connection/connect-flow";
 import { disconnect } from "../connection/connection";
 import { Room } from "colyseus.js";
 import { NpcGameRoomState } from "../connection/state/client-state-spec";
+import { resetMessages, streamedMsgs } from "../streamedMsgs";
 
 const FILE_NAME: string = "LobbyScene.ts"
 

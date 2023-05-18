@@ -13,6 +13,7 @@ export function createNpc(args: NpcCreationArgs): Entity {
     {
       position: args.transformData.position,
       rotation: args.transformData.rotation,
+      scale: args.transformData.scale,
     },
     args.npcData
   )

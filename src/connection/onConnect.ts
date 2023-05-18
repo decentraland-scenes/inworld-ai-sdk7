@@ -4,35 +4,22 @@ import * as clientState from "../connection/state/client-state-spec";
 import * as serverState from "../connection/state/server-state-spec";
 import * as serverStateSpec from "../connection/state/server-state-spec";
 
-//import * as SceneData from "src/og-decentrally/modules/scene";
-//import * as gameUI from "../ui/index";
 import * as utils from "@dcl-sdk/utils";
-//import { Enemy, ENEMY_MGR } from "src/og-decentrally/modules/playerManager";
 import { createEntityForSound } from "../utils/utilities";
-//import * as ui from "@dcl/ui-scene-utils"; TODO: Replace with custom ui
-
-
-//import { Projectile } from "src/og-decentrally/modules/projectiles";
-//import { LevelDataState, TrackFeaturePosition } from "src/og-decentrally/modules/connection/state/server-state-spec";
-//import { levelManager } from "src/og-decentrally/tracks/levelManager";
-//import { Constants } from "src/og-decentrally/modules/resources/globals";
-//import { ColyseusCallbacksCollection, ColyseusCollection } from './state/client-colyseus-ext'
 import { CONFIG } from "../config";
-//import { TrackFeature, TrackFeatureConstructorArgs } from "src/og-decentrally/modules/trackFeatures";
-//import { LeaderBoardManager } from "src/og-decentrally/modules/scene/menu";
-//import { SOUND_POOL_MGR } from "src/og-decentrally/modules/resources/sounds";
-//import { fetchRefreshPlayerCombinedInfo } from "src/og-decentrally/login/login-flow";
-
-
 import { REGISTRY } from "../registry";
-import { Dialog, DialogWindow, ButtonData } from "@dcl/npc-scene-utils";
+//import * as ui from "@dcl/ui-scene-utils"; TODO: Replace with custom ui
+//import { showInputOverlay } from "src/aiNpc/npc/customNPCUI"; TODO: Replace with custom ui
+
+import { Dialog, playAnimation, talk } from "dcl-npc-toolkit";
+import { ButtonData } from 'dcl-npc-toolkit/dist/types'
 //import resources, { setSection } from "src/dcl-scene-ui-workaround/resources";
 import { ChatNext, ChatPart, streamedMsgs } from "../streamedMsgs";
-import { showInputOverlay } from "src/aiNpc/npc/customNPCUI";
-import { closeAllInteractions, createMessageObject, sendMsgToAI } from "src/aiNpc/npc/connectedUtils";
+import { closeAllInteractions, createMessageObject, sendMsgToAI } from "../utils/connectedUtils";
 import { Color4 } from "@dcl/sdk/math";
 import { AudioStream, executeTask } from "@dcl/sdk/ecs";
 import { onConnectHost } from "../lobby-scene/lobbyScene";
+import { endOfRemoteInteractionStream, goodBye } from "../remoteNpc";
 
 //const canvas = ui.canvas
 
@@ -100,10 +87,10 @@ function convertAndPlayAudio(packet: serverStateSpec.ChatPacket) {
     const AUDIO_VOLUME = 1//1 //.2
     const loop = false
     const soundEntity = createEntityForSound("npcSound")//createEntitySound("npcSound", soundClip, AUDIO_VOLUME, loop)
-    AudioStream.create(soundEntity,{
-      url:CONFIG.COLYSEUS_HTTP_ENDPOINT + "/audio-base64-binary?payloadId=" + encodeURIComponent(payloadId),
+    AudioStream.create(soundEntity, {
+      url: CONFIG.COLYSEUS_HTTP_ENDPOINT + "/audio-base64-binary?payloadId=" + encodeURIComponent(payloadId),
       playing: true,
-      volume:1
+      volume: 1
     })
     REGISTRY.activeNPCSound.set(sourceName, soundEntity)
   })
@@ -116,7 +103,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
   //initLevelData(room.state.levelData)
 
   //REGISTRY.npcScene.onConnect( room )
-  onConnectHost(REGISTRY.lobbyScene,room)
+  onConnectHost(REGISTRY.lobbyScene, room)
 
   room.onMessage("grid", (data) => {
     //console.log("GRID DATA: " + JSON.parse(data.grid)[0][0].infectionLevel)
@@ -169,11 +156,12 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
   const goodbye: ButtonData = {
     label: "Goodbye", goToDialog: REGISTRY.askWaitingForResponse.name,
     triggeredActions: () => {
-      REGISTRY.activeNPC?.goodbye()
+
+      goodBye(REGISTRY.activeNPC)
 
       closeAllInteractions()
-      showInputOverlay(false)
-
+      console.error("Implement Mising UI");
+      //showInputOverlay(false)
     }
   }
   const doYouTakeCredit: ButtonData = {
@@ -208,11 +196,12 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
     }
     const dialog = chatPart.text.createNPCDialog()
 
-    showInputOverlay(false)
+    console.error("Implement Mising UI");
+    //showInputOverlay(false)
 
     dialog.triggeredByNext = () => {
       const NO_LOOP = true
-      REGISTRY.activeNPC.npc.playAnimation(REGISTRY.activeNPC.npcAnimations.TALK.name, NO_LOOP, REGISTRY.activeNPC.npcAnimations.TALK.duration)
+      playAnimation(REGISTRY.activeNPC.entity, REGISTRY.activeNPC.npcAnimations.TALK.name, NO_LOOP, REGISTRY.activeNPC.npcAnimations.TALK.duration)
 
       //FIXME WORKAROUND, need to string dialogs together
       //or this workaround lets it end, then start a new one
@@ -228,7 +217,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
         //debugger 
         if (nextPart.text) {
           const nextDialog = createDialog(nextPart)
-          REGISTRY.activeNPC.talk([nextDialog]);
+          talk(REGISTRY.activeNPC.entity, [nextDialog]);
           if (true) {//audio optional
             if (nextPart.audio && nextPart.audio.packet.audio.chunk) {
               console.log("onMessage.structuredMsg.audio", nextPart.audio);
@@ -251,7 +240,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
 
             //GETTING TRIGGERED on race condition i think, audio came through but not text?
             //show input box 
-            REGISTRY.activeNPC.endOfRemoteInteractionStream()
+            endOfRemoteInteractionStream(REGISTRY.activeNPC)
             //debugger
             //REGISTRY.activeNPC.talk([askWhatCanIHelpYouWithDialog,REGISTRY.askWaitingForResponse]);
           } else {
@@ -268,7 +257,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
     return dialog
   }
 
-  
+
   room.state.players.onAdd = (_player: serverStateSpec.PlayerState, sessionId: string) => {
     //workaround for now
     const player = _player as clientState.PlayerState
@@ -309,7 +298,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       streamedMsgs.waitingForMore = false
       const dialog = createDialog(nextPart)
       if (dialog) {
-        REGISTRY.activeNPC.talk([dialog]);
+        talk(REGISTRY.activeNPC.entity, [dialog]);
       } else {
         console.log("structuredMsg", "createDialog", "no dialog to show,probably just a control msg", dialog, "chatPart", chatPart, "nextPart", nextPart)
       }
@@ -339,7 +328,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       //if (message !== undefined && message.msg === undefined) {
       GAME_STATE.notifyInGameMsg(data.message);
       //ui.displayAnnouncement(data.title + "\n" + data.message,
-        //data.duration !== undefined ? data.duration : 8, data.isError ? Color4.Red() : Color4.White(), 60);
+      //data.duration !== undefined ? data.duration : 8, data.isError ? Color4.Red() : Color4.White(), 60);
       //}
     }
 
