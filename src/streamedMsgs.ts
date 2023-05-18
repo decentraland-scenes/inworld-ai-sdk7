@@ -233,10 +233,17 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
       const maxScanDist = 2 //assume control in next 2 frames (behaviour + control or more text,etc)
       const yMin = Math.min(counterInc + maxScanDist, message.streamedMessages.length)
       let yCounter = 0
+      const xPos = x
+      let emotionFound:ChatPart
+
       //TODO make scan part of main loop
       scanLoop: for (let y = x; y < yMin; y++) {
         const msg = message.streamedMessages[y]
         //should we be checking same interaction id as above?  can a seperate interation close it?
+
+        if(msg.packet.type === serverState.ChatPacketType.EMOTION){
+          emotionFound = msg
+        }
 
         if (utteranceId == msg.packet.packetId.utteranceId) {
           //found again, pick up here
@@ -246,6 +253,13 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
           //move other 2 counters
           msgIndexTemp += yCounter
           counterInc += yCounter
+
+          if(!emotion){
+            //debugger pretty save to assume it matches
+            //TODO consider time stamp as part of this?
+            emotion = emotionFound
+            console.log(METHOD_NAME,"utterance.end.check FOUND again also picked up an emotion","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.y",y,this.streamedMessages.length)
+          }
 
 
           console.log(METHOD_NAME, "utterance.end.check FOUND again", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", message.messageIndex, "counterInc", counterInc, "loop.y", y, message.streamedMessages.length, "returning to ")
@@ -257,6 +271,24 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
         yCounter++
 
       }//end scan loop
+
+      //back check for emotions??
+      //debugger
+      if(!emotion && emotionFound){
+        //debugger pretty save to assume it matches
+        //TODO consider time stamp range as part of this?
+        const matchedAudioDate = audio && (emotionFound.packet.date === audio.packet.date)
+        const matchedTextDate = text && (emotionFound.packet.date === text.packet.date)
+
+        if(matchedAudioDate || matchedTextDate){
+          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion date matched well enough","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.x",x,this.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+          emotion = emotionFound
+        }else{
+          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion groupable?","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.x",x,this.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+        }
+        //
+        
+      }
 
       console.log(METHOD_NAME, "utterance.end.check hit NOT FOUND", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", message.messageIndex, "counterInc", counterInc, "loop.x", x, message.streamedMessages.length, "text", text !== undefined, "audio", audio !== undefined)
       break mainLoop;
