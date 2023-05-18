@@ -8,7 +8,7 @@ import * as serverStateSpec from "../connection/state/server-state-spec";
 //import * as gameUI from "../ui/index";
 import * as utils from "@dcl-sdk/utils";
 //import { Enemy, ENEMY_MGR } from "src/og-decentrally/modules/playerManager";
-import { createEntityForSound, createEntitySound, isNull, notNull, realDistance } from "src/utils/utilities";
+import { createEntityForSound } from "../utils/utilities";
 //import * as ui from "@dcl/ui-scene-utils"; TODO: Replace with custom ui
 
 
@@ -17,21 +17,22 @@ import { createEntityForSound, createEntitySound, isNull, notNull, realDistance 
 //import { levelManager } from "src/og-decentrally/tracks/levelManager";
 //import { Constants } from "src/og-decentrally/modules/resources/globals";
 //import { ColyseusCallbacksCollection, ColyseusCollection } from './state/client-colyseus-ext'
-import { CONFIG } from "src/config";
+import { CONFIG } from "../config";
 //import { TrackFeature, TrackFeatureConstructorArgs } from "src/og-decentrally/modules/trackFeatures";
 //import { LeaderBoardManager } from "src/og-decentrally/modules/scene/menu";
 //import { SOUND_POOL_MGR } from "src/og-decentrally/modules/resources/sounds";
 //import { fetchRefreshPlayerCombinedInfo } from "src/og-decentrally/login/login-flow";
 
 
-import { REGISTRY } from "src/registry";
+import { REGISTRY } from "../registry";
 import { Dialog, DialogWindow, ButtonData } from "@dcl/npc-scene-utils";
-import resources, { setSection } from "src/dcl-scene-ui-workaround/resources";
-import { ChatNext, ChatPart, streamedMsgs } from "src/aiNpc/npc/streamedMsgs";
+//import resources, { setSection } from "src/dcl-scene-ui-workaround/resources";
+import { ChatNext, ChatPart, streamedMsgs } from "../streamedMsgs";
 import { showInputOverlay } from "src/aiNpc/npc/customNPCUI";
 import { closeAllInteractions, createMessageObject, sendMsgToAI } from "src/aiNpc/npc/connectedUtils";
 import { Color4 } from "@dcl/sdk/math";
-import { executeTask } from "@dcl/sdk/ecs";
+import { AudioStream, executeTask } from "@dcl/sdk/ecs";
+import { onConnectHost } from "../lobby-scene/lobbyScene";
 
 //const canvas = ui.canvas
 
@@ -94,11 +95,16 @@ function convertAndPlayAudio(packet: serverStateSpec.ChatPacket) {
 
   executeTask(async () => {
     //base64 is too big, passing payloadId and server will look it up and convert it
-    const soundClip = new AudioStream(CONFIG.COLYSEUS_HTTP_ENDPOINT + "/audio-base64-binary?payloadId=" + encodeURIComponent(payloadId))
+    //const soundClip = new AudioStream()
     //const soundSource = new AudioSource(soundClip) 
     const AUDIO_VOLUME = 1//1 //.2
     const loop = false
-    const soundEntity = createEntitySound("npcSound", soundClip, AUDIO_VOLUME, loop)
+    const soundEntity = createEntityForSound("npcSound")//createEntitySound("npcSound", soundClip, AUDIO_VOLUME, loop)
+    AudioStream.create(soundEntity,{
+      url:CONFIG.COLYSEUS_HTTP_ENDPOINT + "/audio-base64-binary?payloadId=" + encodeURIComponent(payloadId),
+      playing: true,
+      volume:1
+    })
     REGISTRY.activeNPCSound.set(sourceName, soundEntity)
   })
 }
@@ -110,7 +116,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
   //initLevelData(room.state.levelData)
 
   //REGISTRY.npcScene.onConnect( room )
-  REGISTRY.lobbyScene.onConnect(room)
+  onConnectHost(REGISTRY.lobbyScene,room)
 
   room.onMessage("grid", (data) => {
     //console.log("GRID DATA: " + JSON.parse(data.grid)[0][0].infectionLevel)
@@ -262,7 +268,11 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
     return dialog
   }
 
-  room.state.players.onAdd = (player: clientState.PlayerState, sessionId: string) => {
+  
+  room.state.players.onAdd = (_player: serverStateSpec.PlayerState, sessionId: string) => {
+    //workaround for now
+    const player = _player as clientState.PlayerState
+
     console.log("room.state.players.onAdd", player);
 
     player.listen("remoteClientCache", (remoteClientCache: clientState.InWorldConnectionClientCacheState) => {

@@ -24,7 +24,7 @@ class Registry {
 	myNPC!: RemoteNpc
 	activeNPC!: RemoteNpc
 	allNPCs: RemoteNpc[] = []
-  activateNPCSound: Map<string, Entity> = new Map()
+  activeNPCSound: Map<string,Entity>=new Map()
   askWaitingForResponse!: Dialog
   lobbyScene!: LobbyScene
   serverTime: number = -1
