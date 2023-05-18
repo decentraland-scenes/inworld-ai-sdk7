@@ -287,7 +287,7 @@ export namespace EmotionEvent {
   }
 }
 export interface ChatPacketProps {
-  serverRecievedTime?:number
+  serverReceivedTime?:number
   audio?: AudioEvent;
   control?: ControlEvent;
   custom?: CustomEvent;
@@ -346,7 +346,7 @@ export interface IChatPacket {
   emotions: EmotionEvent;
 }
 export class ChatPacket implements IChatPacket{
-  serverRecievedTime:number
+  serverReceivedTime:number
   type:ChatPacketType;
   date: string;
   packetId: PacketId;
@@ -357,7 +357,7 @@ export class ChatPacket implements IChatPacket{
   custom: CustomEvent;
   emotions: EmotionEvent;
   constructor(props: ChatPacketProps){
-    this.serverRecievedTime = props.serverRecievedTime ? props.serverRecievedTime : Date.now() //BAD FOR CLIENT SIDE, RENAME instCreateTime??
+    this.serverReceivedTime = props.serverReceivedTime ? props.serverReceivedTime : Date.now() //BAD FOR CLIENT SIDE, RENAME instCreateTime??
     this.type = props.type
     this.date = props.date
     this.audio = props.audio
