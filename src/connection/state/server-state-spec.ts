@@ -1,30 +1,30 @@
-export interface Vector3State {
-  x: number
-  y: number
-  z: number
+export interface Vector3State{
+  x:number
+  y:number
+  z:number
 }
-export interface Quaternion3State {
-  x: number
-  y: number
-  z: number
-  w: number
-}
-
-
-export interface ClockState {
-  serverTime: number
-}
-export interface PlayerButtonState {
-  forward: boolean
-  backward: boolean
-  left: boolean
-  right: boolean
-  shoot: boolean
+export interface Quaternion3State{
+  x:number
+  y:number
+  z:number
+  w:number
 }
 
-export interface PlayerNpcDataState extends ClockState {
+
+export interface ClockState{
+  serverTime:number
+}
+export interface PlayerButtonState{
+  forward:boolean
+  backward:boolean
+  left:boolean
+  right:boolean
+  shoot:boolean
+}
+
+export interface PlayerNpcDataState extends ClockState{
   //move this to player race specific data???
-  worldPosition: Vector3State
+  worldPosition:Vector3State
   //playerPosition:Vector3State //car location will scene center since it does not move
   /*
   closestProjectedPoint:Vector3State //is scene relative, but when used with closestSegmentID + track data can compute where
@@ -37,172 +37,172 @@ export interface PlayerNpcDataState extends ClockState {
   
   currentSpeed:number
   */
-  worldMoveDirection: Quaternion3State//world moving direction
-  shootDirection: Quaternion3State //car forward direction
-  cameraDirection: Quaternion3State //turn angle
-  endTime: number //move this as wont change till the end
+  worldMoveDirection:Quaternion3State//world moving direction
+  shootDirection:Quaternion3State //car forward direction
+  cameraDirection:Quaternion3State //turn angle
+  endTime:number //move this as wont change till the end
   enrollTime: number//time joined
-  teamId: string//carModelId:string //move this as wont change much if at all?
+  teamId:string//carModelId:string //move this as wont change much if at all?
   //lapTimes //TODO ADD DEFINITION HERE!!!
-  racePosition: number
-
-  lastKnownServerTime: number
-  lastKnownClientTime: number
+  racePosition:number 
+  
+  lastKnownServerTime:number
+  lastKnownClientTime:number
 
   //isDrifting: boolean
   //currentSpeed : number
 }
 
-export type NpcProxyStatus = "unknown" | "not-started" | "starting" | "started" | "ended"
-export type PlayerConnectionStatus = "unknown" | "connected" | "reconnecting" | "disconnected" | "lost connection"
+export type NpcProxyStatus="unknown"|"not-started"|"starting"|"started"|"ended"
+export type PlayerConnectionStatus="unknown"|"connected"|"reconnecting"|"disconnected"|"lost connection"
 
-export interface PlayerState {
-  id: string
-  sessionId: string
+export interface PlayerState{
+  id:string
+  sessionId:string
 
-  connStatus: PlayerConnectionStatus
-  type: "combatant" | "spectator"
-  remoteClientCache: InWorldConnectionClientCacheState
+  connStatus:PlayerConnectionStatus
+  type:"combatant"|"spectator"
+  remoteClientCache:InWorldConnectionClientCacheState  
 
-  userData: PlayerUserDataState
-  npcData: PlayerNpcDataState
+  userData:PlayerUserDataState
+  npcData:PlayerNpcDataState
   buttons: PlayerButtonState
 }
 
 
 
-export interface PlayerUserDataState {
-  name: string
-  userId: string
+export interface PlayerUserDataState{
+  name:string
+  userId:string
   ///snapshotFace128:string snapshots deprecated use AvatarTexture
 }
 
-export interface NpcState extends ClockState {
-  id: string
-  name: string
-  status: NpcProxyStatus
-  startTime: number
-  timeLimit: number
-  endTime: number
-  endTimeActual: number
-  maxLaps: number //move to track data or is max laps race data?
+export interface NpcState extends ClockState{
+  id:string
+  name:string
+  status:NpcProxyStatus
+  startTime:number
+  timeLimit:number
+  endTime:number
+  endTimeActual:number
+  maxLaps:number //move to track data or is max laps race data?
 }
 
 //broadcast object instead of linking to state the level details
-export interface LevelDataState {
-  id: string
-  name: string
+export interface LevelDataState{
+  id:string
+  name:string
   //status:RaceStatus
 
   //theme:Theme
   //FIXME cannot declare this
-  trackFeatures: Map<any, ITrackFeatureState>//Map<any,TrackFeatureConstructorArgs>
-  localTrackFeatures?: TrackFeatureConstructorArgs[] //for loading only, not for state sharing
+  trackFeatures:Map<any,ITrackFeatureState>//Map<any,TrackFeatureConstructorArgs>
+  localTrackFeatures?:TrackFeatureConstructorArgs[] //for loading only, not for state sharing
 
-  maxLaps: number //move to track data or is max laps race data?
+  maxLaps:number //move to track data or is max laps race data?
   //trackPath:Vector3State[]
   //other track info?
 }
 
 
-export type TrackFeatureType = 'boost' | 'slow-down' | 'inert' | 'wall' | 'fresh-snow' | 'spawn-point' | 'ice-tile' | 'fireplace' | 'trench' | 'powerup'
+export type TrackFeatureType='boost'|'slow-down'|'inert'|'wall'|'fresh-snow'|'spawn-point'|'ice-tile'|'fireplace'|'trench'|'powerup'
 
-export function getTrackFeatureType(str: string) {
+export function getTrackFeatureType(str:string){
   return str as TrackFeatureType
 }
 
-export interface TrackFeatureConstructorArgs {
-  name: string
-  position: ITrackFeaturePosition
-  //triggerSize?:Vector3
-  //shape:TrackFeatureShape
-  type: TrackFeatureType
-  lastTouchTime?: number
-  activateTime?: number
+export interface TrackFeatureConstructorArgs{
+    name:string
+    position:ITrackFeaturePosition
+    //triggerSize?:Vector3
+    //shape:TrackFeatureShape
+    type:TrackFeatureType
+    lastTouchTime?:number
+    activateTime?:number
 }
-export interface TrackFeatureUpdate extends TrackFeatureConstructorArgs {
-
+export interface TrackFeatureUpdate extends TrackFeatureConstructorArgs{
+  
 }
 
 //can we get rid of and replace with 'TrackFeatureConstructorArgs'?
 
-export interface ITrackFeatureState extends ClockState {
-  name: string
-  position: ITrackFeaturePosition
+export interface ITrackFeatureState extends ClockState{
+  name:string
+  position:ITrackFeaturePosition
   //triggerSize?:Vector3
   //shape:TrackFeatureShape
-  type: TrackFeatureType
-  lastTouchTime?: number
-  activateTime?: number
+  type:TrackFeatureType 
+  lastTouchTime?:number
+  activateTime?:number
 }
 
-export interface TrackFeatureStateConstructorArgs extends ITrackFeatureState {
+export interface TrackFeatureStateConstructorArgs extends ITrackFeatureState{
 }
 
-export type TrackFeaturePositionConstructorArgs = {
-  position?: Vector3State//optional, if set its the exact spot
-  rotation?: Quaternion3State//optional, if set its the exact rotation
+export type TrackFeaturePositionConstructorArgs={
+  position?:Vector3State//optional, if set its the exact spot
+  rotation?:Quaternion3State//optional, if set its the exact rotation
 }
 
-export function createTrackFeaturePositionConstructorArgs(position: ITrackFeaturePosition) {
-  return {
-    position: position.position,
-    rotation: position.rotation,
-  }
+export function createTrackFeaturePositionConstructorArgs(position:ITrackFeaturePosition){
+  return { 
+      position: position.position,
+      rotation: position.rotation,
+  } 
 }
 
-export interface ITrackFeaturePosition {
-  position?: Vector3State//optional, if set its the exact spot
-  rotation?: Quaternion3State//optional, if set its the exact rotation
+export interface ITrackFeaturePosition{
+  position?:Vector3State//optional, if set its the exact spot
+  rotation?:Quaternion3State//optional, if set its the exact rotation
 
 }
-export class TrackFeaturePosition implements ITrackFeaturePosition {
-  position?: Vector3State//optional, if set its the exact spot
-  rotation?: Quaternion3State//optional, if set its the exact rotation
-  startSegment: number
-  endSegment: number
-  offset?: Vector3State
-  centerOffset?: number
+export class TrackFeaturePosition implements ITrackFeaturePosition{
+  position?:Vector3State//optional, if set its the exact spot
+  rotation?:Quaternion3State//optional, if set its the exact rotation
+  startSegment:number
+  endSegment:number
+  offset?:Vector3State
+  centerOffset?:number
   //entity:Entity
 
-  constructor(args: TrackFeaturePositionConstructorArgs) {
+  constructor(args:TrackFeaturePositionConstructorArgs){
     this.position = args.position
     this.rotation = args.rotation
   }
 }
 
-export interface NpcRoomDataOptions {
-  levelId: string
-  name?: string
-  maxLaps?: number
-  maxPlayers?: number
-  minPlayers?: number
-  customRoomId?: string
-  timeLimit?: number
-  waitTimeToStart?: number
+export interface NpcRoomDataOptions{
+  levelId:string
+  name?:string
+  maxLaps?:number
+  maxPlayers?:number
+  minPlayers?:number
+  customRoomId?:string
+  timeLimit?:number
+  waitTimeToStart?:number
 }
 
 
-export interface EnrollmentState extends ClockState {
-  open: boolean
-  startTime: number
-  endTime: number
-  maxPlayers: number
+export interface EnrollmentState extends ClockState{
+  open:boolean
+  startTime:number
+  endTime:number
+  maxPlayers:number
 }
 
 
-export interface NpcGameRoomState {
-  players: Map<any, PlayerState>
-  npcState: NpcState
-  enrollment: EnrollmentState
-  levelData: LevelDataState
+export interface NpcGameRoomState{
+  players:Map<any,PlayerState>
+  npcState:NpcState
+  enrollment:EnrollmentState
+  levelData:LevelDataState
 }
 
-export type ShowMessage = {
-  title: string,
-  message: string,
-  duration: number,
-  isError: boolean
+export type ShowMessage={
+  title:string,
+  message:string,
+  duration:number,
+  isError:boolean
 }
 
 /////IN WORLD
@@ -220,7 +220,74 @@ export enum ChatControlType {
   UNKNOWN = 0,
   INTERACTION_END = 3
 }
+export enum EmotionStrengthCode {
+  UNSPECIFIED = "UNSPECIFIED",
+  WEAK = "WEAK",
+  STRONG = "STRONG",
+  NORMAL = "NORMAL"
+}
+export enum EmotionBehaviorCode {
+  NEUTRAL = "NEUTRAL",
+  DISGUST = "DISGUST",
+  CONTEMPT = "CONTEMPT",
+  BELLIGERENCE = "BELLIGERENCE",
+  DOMINEERING = "DOMINEERING",
+  CRITICISM = "CRITICISM",
+  ANGER = "ANGER",
+  TENSION = "TENSION",
+  TENSE_HUMOR = "TENSE_HUMOR",
+  DEFENSIVENESS = "DEFENSIVENESS",
+  WHINING = "WHINING",
+  SADNESS = "SADNESS",
+  STONEWALLING = "STONEWALLING",
+  INTEREST = "INTEREST",
+  VALIDATION = "VALIDATION",
+  AFFECTION = "AFFECTION",
+  HUMOR = "HUMOR",
+  SURPRISE = "SURPRISE",
+  JOY = "JOY"
+}
+export namespace EmotionEvent {
+  export type AsObject = {
+      joy: number,
+      fear: number,
+      trust: number,
+      surprise: number,
+      behavior: EmotionEvent.SpaffCode,
+      strength: EmotionEvent.Strength,
+  }
+
+  export enum SpaffCode {
+  NEUTRAL = 0,
+  DISGUST = 1,
+  CONTEMPT = 2,
+  BELLIGERENCE = 3,
+  DOMINEERING = 4,
+  CRITICISM = 5,
+  ANGER = 6,
+  TENSION = 7,
+  TENSE_HUMOR = 8,
+  DEFENSIVENESS = 9,
+  WHINING = 10,
+  SADNESS = 11,
+  STONEWALLING = 12,
+  INTEREST = 13,
+  VALIDATION = 14,
+  AFFECTION = 15,
+  HUMOR = 16,
+  SURPRISE = 17,
+  JOY = 18,
+  }
+
+  export enum Strength {
+  UNSPECIFIED = 0,
+  WEAK = 1,
+  STRONG = 2,
+  NORMAL = 3,
+  }
+}
 export interface ChatPacketProps {
+  serverRecievedTime?:number
   audio?: AudioEvent;
   control?: ControlEvent;
   custom?: CustomEvent;
@@ -238,14 +305,8 @@ export interface PacketId {
   interactionId: string;
 }
 export interface EmotionEvent {
-  joy: number;
-  fear: number;
-  trust: number;
-  surprise: number;
-  //behavior: EmotionBehavior;
-  behavior?: any//FIXME DEFINE CORRECTLY, is this new?
-  strength?: any//FIXME DEFINE CORRECTLY, is this new?
-  //strength: EmotionStrength;
+  behavior: EmotionBehaviorCode
+  strength: EmotionStrengthCode;
 }
 export interface Routing {
   source: Actor;
@@ -256,7 +317,7 @@ export interface Actor {
   name: string;
   isPlayer: boolean;
   isCharacter: boolean;
-  xId?: CharacterId
+  xId?:CharacterId
 }
 export interface TextEvent {
   text: string;
@@ -274,7 +335,7 @@ export interface ControlEvent {
 
 
 export interface IChatPacket {
-  type: ChatPacketType;
+  type:ChatPacketType;
   date: string;
   packetId: PacketId;
   routing: Routing;
@@ -284,8 +345,9 @@ export interface IChatPacket {
   custom: CustomEvent;
   emotions: EmotionEvent;
 }
-export class ChatPacket implements IChatPacket {
-  type: ChatPacketType;
+export class ChatPacket implements IChatPacket{
+  serverRecievedTime:number
+  type:ChatPacketType;
   date: string;
   packetId: PacketId;
   routing: Routing;
@@ -294,16 +356,17 @@ export class ChatPacket implements IChatPacket {
   control: ControlEvent;
   custom: CustomEvent;
   emotions: EmotionEvent;
-  constructor(props: ChatPacketProps) {
+  constructor(props: ChatPacketProps){
+    this.serverRecievedTime = props.serverRecievedTime ? props.serverRecievedTime : Date.now() //BAD FOR CLIENT SIDE, RENAME instCreateTime??
     this.type = props.type
     this.date = props.date
-    if (props?.audio) this.audio = props.audio
+    this.audio = props.audio
     this.packetId = props.packetId
     this.routing = props.routing
-    if (props?.text) this.text = props.text
-    if (props?.emotions) this.emotions = props.emotions
-    if (props?.control) this.control = props.control
-    if (props?.custom) this.custom = props.custom
+    this.text = props.text
+    this.emotions = props.emotions
+    this.control = props.control
+    this.custom = props.custom
   }
   /*isText(): boolean;
   isAudio(): boolean;
@@ -317,17 +380,17 @@ export class ChatPacket implements IChatPacket {
 /////IN WORLD custom
 
 
-export class InWorldConnectionClientCacheState {
-  currentCharacterId: CharacterId
-  currentSceneTrigger: TriggerId
+export class InWorldConnectionClientCacheState{
+  currentCharacterId:CharacterId
+  currentSceneTrigger:TriggerId
 }
 
 
-export interface ChatMessageProps extends ChatPacketProps {
+export interface ChatMessageProps extends ChatPacketProps{
 }
 
-export class ChatMessage implements IChatPacket {
-  type: ChatPacketType;
+export class ChatMessage implements IChatPacket{
+  type:ChatPacketType;
   date: string;
   packetId: PacketId;
   routing: Routing;
@@ -336,16 +399,16 @@ export class ChatMessage implements IChatPacket {
   control: ControlEvent;
   custom: CustomEvent;
   emotions: EmotionEvent;
-  constructor(props: ChatMessageProps) {
+  constructor(props: ChatMessageProps){
     this.type = props.type
     this.date = props.date
-    if (props?.audio) this.audio = props.audio
+    this.audio = props.audio
     this.packetId = props.packetId
     this.routing = props.routing
-    if (props?.text) this.text = props.text
-    if (props?.emotions) this.emotions = props.emotions
-    if (props?.control) this.control = props.control
-    if (props?.custom) this.custom = props.custom
+    this.text = props.text
+    this.emotions = props.emotions
+    this.control = props.control
+    this.custom = props.custom
   }
   /*isText(): boolean;
   isAudio(): boolean;
@@ -355,11 +418,13 @@ export class ChatMessage implements IChatPacket {
   isInteractionEnd(): boolean;*/
 }
 
-export type CharacterId = {
-  resourceName: string
-  //id:string
+export type CharacterId={
+  resourceName:string//natural key
+  confirmed?:boolean //if server confirmed active
+  id?:string//server side storage
 }
-export type TriggerId = {
-  name: string
+export type TriggerId={
+  name:string
+  confirmed?:boolean //if server confirmed active
   //id:string
 }
