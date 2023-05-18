@@ -1,6 +1,11 @@
 import { engine, MeshRenderer, Transform } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
-import { initRegistery } from './registry'
+import { initRegistery, REGISTRY } from './registry'
+import { initDialogs } from './npcDialog'
+import { setupNPC } from './npcSetup'
+import { LobbyScene } from './lobby-scene/lobbyScene'
+import { Room } from 'colyseus.js'
+import { onNpcRoomConnect } from './connection/onConnect'
 
 // export all the functions required to make the scene work
 export * from '@dcl/sdk'
@@ -14,3 +19,26 @@ Transform.create(floor, {
 })
 
 initRegistery()
+
+initDialogs()
+
+REGISTRY.lobbyScene = new LobbyScene()
+
+setupNPC()
+
+
+REGISTRY.onConnectActions = (room: Room<any>, eventName: string) => {
+  //npcConn.onNpcRoomConnect(room)
+  onNpcRoomConnect(room)
+}
+
+//docs say will fire after 1 minute
+/*
+onIdleStateChangedObservable.add(({ isIdle }) => {
+  log("Idle State change: ", isIdle)
+  if (isIdle) {
+    //prevent too many connnections for AFKers, it will auto reconnect if u interact with something again
+    REGISTRY.lobbyScene.endBattle()
+  }
+})
+*/

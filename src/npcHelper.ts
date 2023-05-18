@@ -1,14 +1,11 @@
 import { Entity } from "@dcl/sdk/ecs";
 import { Vector3 } from "@dcl/sdk/math";
 import * as npcLib from "dcl-npc-toolkit";
+import { ImageData, NPCData } from "dcl-npc-toolkit/dist/types";
 
 export class NpcCreationArgs{
   transformData: any
-  modelPath: string
-  sfxPath: string
-  onActivate: () => void
-  onWalkAway: () => void
-  cooldownDuration: number
+  npcData: NPCData
 }
 
 export function createNpc(args: NpcCreationArgs): Entity {
@@ -17,19 +14,7 @@ export function createNpc(args: NpcCreationArgs): Entity {
       position: args.transformData.position,
       rotation: args.transformData.rotation,
     },
-    {
-      type: npcLib.NPCType.CUSTOM,
-      model: args.modelPath,
-      onActivate: () => {
-        args.onActivate()
-      },
-      onWalkAway: () => {
-        args.onWalkAway()
-      },
-      dialogSound: args.sfxPath,
-      onlyETrigger: true,
-      coolDownDuration: 3,
-    }
+    args.npcData
   )
 
   return npc
