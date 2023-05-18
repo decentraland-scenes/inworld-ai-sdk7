@@ -29,6 +29,7 @@ export type RemoteNpcThinkingOptions = {
   modelPath?: string//TODO: this was a GLTF component so figure that out
   modelScale?: Vector3
   modelOffset?: Vector3
+  textEnabled?:boolean
   text?: string
   textScale?: Vector3
   textOffset?: Vector3
@@ -125,7 +126,7 @@ function showThinking(npc: RemoteNpc): void {
       scale: Vector3.create(.1, .1, .1)
     })
 
-    if (npc.thinkingIconEnabled) {
+    if(npc.thinkingIconEnabled && (args.thinking.textEnabled === undefined || args.thinking.textEnabled)){
       TextShape.create(npc.thinkingIconText, {
         text: args.thinking?.text ? args.thinking.text : "Thinking..."
       })
