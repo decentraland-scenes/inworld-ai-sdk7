@@ -258,7 +258,7 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
             //debugger pretty save to assume it matches
             //TODO consider time stamp as part of this?
             emotion = emotionFound
-            console.log(METHOD_NAME,"utterance.end.check FOUND again also picked up an emotion","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.y",y,this.streamedMessages.length)
+            console.log(METHOD_NAME,"utterance.end.check FOUND again also picked up an emotion","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",message.messageIndex,"counterInc",counterInc,"loop.y",y,message.streamedMessages.length)
           }
 
 
@@ -281,10 +281,10 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
         const matchedTextDate = text && (emotionFound.packet.date === text.packet.date)
 
         if(matchedAudioDate || matchedTextDate){
-          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion date matched well enough","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.x",x,this.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion date matched well enough","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",message.messageIndex,"counterInc",counterInc,"loop.x",x,message.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
           emotion = emotionFound
         }else{
-          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion groupable?","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.x",x,this.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion groupable?","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",message.messageIndex,"counterInc",counterInc,"loop.x",x,message.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
         }
         //
         
