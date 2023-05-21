@@ -125,10 +125,8 @@ export function setupNPC() {
         type: npcLib.NPCType.CUSTOM,
         model: 'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
-          /*
           console.log('dclGuide.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
-          */
           return
           REGISTRY.activeNPC = dclGuide
           closeAllInteractions({ exclude: REGISTRY.activeNPC })
