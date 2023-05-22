@@ -18,6 +18,10 @@ export class LobbyScene {
 }
 
 export function connectNpcToLobby(host: LobbyScene, npc: RemoteNpc): void {
+
+  const METHOD_NAME = "connectNpcToLobby"
+  console.log(FILE_NAME, METHOD_NAME, "Entry");
+
   host.pendingConvoWithNPC = undefined
   host.pendingConvoActionWithNPC = undefined
   REGISTRY.activeNPC = npc
@@ -26,10 +30,13 @@ export function connectNpcToLobby(host: LobbyScene, npc: RemoteNpc): void {
 
   resetMessages(streamedMsgs)
 
+
   if (GAME_STATE.gameRoom && GAME_STATE.gameConnected === 'connected') {
+    console.log(FILE_NAME, METHOD_NAME, "Connected Route");
     startConvoWithNpc(host, npc)
   }
   else {
+    console.log(FILE_NAME, METHOD_NAME, "Disconnected Route");
     console.log("NPC", npc.name, "GAME_STATE.gameConnected", GAME_STATE.gameConnected, "connect first")
     host.pendingConvoWithNPC = npc
     initArena(host, false)
@@ -50,7 +57,7 @@ function startConvoWithNpc(host: LobbyScene, npc: RemoteNpc) {
 
 function initArena(host: LobbyScene, force: boolean) {
   const METHOD_NAME = "initArena"
-  console.log(METHOD_NAME, "ENTRY", force)
+  console.log(FILE_NAME, METHOD_NAME, "ENTRY", force)
 
   resetBattleArena(host)
 
@@ -65,7 +72,16 @@ function initArena(host: LobbyScene, force: boolean) {
   };
 
   const roomName = "genesis_plaza"
-  joinOrCreateRoomAsync(roomName, connectOptions)
+  console.log(FILE_NAME, METHOD_NAME, "ENTRY", "JoinOrCreate")
+  let promises = joinOrCreateRoomAsync(roomName, connectOptions)
+  promises
+    .then((room) => {
+      console.log(FILE_NAME, METHOD_NAME, "Promise.Then")
+    })
+    .catch(error => {
+      console.log(FILE_NAME, METHOD_NAME, "Promise.Catch")
+    }
+  )
 }
 
 export function onConnectHost(host: LobbyScene, room: Room<NpcGameRoomState>) {
@@ -81,13 +97,13 @@ export function onConnectHost(host: LobbyScene, room: Room<NpcGameRoomState>) {
   }
 }
 
-export function disconnectHost(host: LobbyScene){
+export function disconnectHost(host: LobbyScene) {
   const METHOD_NAME = "endBattle"
-  console.log(METHOD_NAME,"ENTRY")
+  console.log(FILE_NAME, METHOD_NAME, "ENTRY")
   disconnect(true)
 }
 
 function resetBattleArena(host: LobbyScene) {
   const METHOD_NAME = "resetBattleArena"
-  console.log(METHOD_NAME, "ENTRY")
+  console.log(FILE_NAME, METHOD_NAME, "ENTRY")
 }

@@ -6,7 +6,6 @@ import { closeAllInteractions } from './utils/connectedUtils'
 import { FollowPathData } from 'dcl-npc-toolkit/dist/types'
 import { Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
-import { MeshRenderer, Transform, engine } from '@dcl/sdk/ecs'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -28,6 +27,21 @@ let npcBluntBobby: RemoteNpc
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
+  // createDogeNpc()  
+  createDclGuide()  
+
+  if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
+
+  for (const p of REGISTRY.allNPCs) {
+    //TODO: Set Display text to center
+    console.error("Check: ", FILE_NAME, 184);
+    //p.npc.dialog.text.hTextAlign = 'center'
+  }
+
+  console.log("setupNPC", "RETURN")
+}
+
+function createDogeNpc() {
   const offsetpath = 5
   let dogePathPoints = [
     Vector3.create(offsetpath, .24, offsetpath),
@@ -46,7 +60,7 @@ export function setupNPC() {
     { resourceName: "workspaces/genesis_city/characters/doge" },
     {
       transformData:
-      { 
+      {
         position: Vector3.clone(dogePath.path[0]),
         scale: Vector3.create(2, 2, 2)
       },
@@ -117,6 +131,10 @@ export function setupNPC() {
   npcLib.followPath(doge.entity, dogePath)
   //doge.showThinking(true)
 
+  REGISTRY.allNPCs.push(doge)
+}
+
+function createDclGuide() {
   dclGuide = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/dcl_guide" },
     {
@@ -143,7 +161,7 @@ export function setupNPC() {
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
-        faceUser: true,//continue to face user???
+        //faceUser: true,//continue to face user???
         //portrait:
         //{
         //  path: 'images/portraits/marsha.png', height: 300, width: 300
@@ -186,16 +204,6 @@ export function setupNPC() {
   )
   dclGuide.name = "npc.dclGuide"
 
-  REGISTRY.allNPCs.push(doge)
   REGISTRY.allNPCs.push(dclGuide)
 
-  if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
-
-  for (const p of REGISTRY.allNPCs) {
-    //TODO: Set Display text to center
-    console.error("Check: ", FILE_NAME, 184);
-    //p.npc.dialog.text.hTextAlign = 'center'
-  }
-
-  console.log("setupNPC", "RETURN")
 }

@@ -123,6 +123,9 @@ export class StreamedMessages {
 }
 
 export function resetMessages(message: StreamedMessages): void {
+  const METHOD_NAME = "resetMessages"
+  console.log(FILE_NAME, METHOD_NAME, "Entry");
+
   message.started = false
   message.streamedMessages = []
   message.streamedInteractions = []

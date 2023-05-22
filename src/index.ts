@@ -6,6 +6,10 @@ import { setupNPC } from './npcSetup'
 import { LobbyScene } from './lobby-scene/lobbyScene'
 import { Room } from 'colyseus.js'
 import { onNpcRoomConnect } from './connection/onConnect'
+import "./polyfill/delcares";
+import { initConfig } from './config'
+import { setUpUI as setupUI } from './ui'
+
 
 // export all the functions required to make the scene work
 export * from '@dcl/sdk'
@@ -19,7 +23,7 @@ Transform.create(floor, {
 })
 
 initRegistery()
-
+initConfig()
 initDialogs()
 
 REGISTRY.lobbyScene = new LobbyScene()
@@ -42,3 +46,5 @@ onIdleStateChangedObservable.add(({ isIdle }) => {
   }
 })
 */
+
+setupUI()

@@ -7,7 +7,11 @@ const askWaitingForResponse: Dialog = {
   //offsetX: 60,
   isQuestion: false,
   skipable: false,
-  isEndOfDialog: true
+  isEndOfDialog: true,
+
+  triggeredByNext: () => {
+    console.log("waitingDialog.ts", "Trigger  Next Dialog")
+  }  
 }
 
 export function initDialogs() {
