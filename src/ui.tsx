@@ -1,7 +1,10 @@
-import ReactEcs, { ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
+import ReactEcs, { Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import { NpcUtilsUi } from 'dcl-npc-toolkit/dist/ui'
+import { customNpcUI } from './NPCs/customUi'
 
-const uiComponent = () => (
+const uiComponent = () => [NpcUtilsUi(), customNpcUI()]
+
+const uiComponent2 = () => (
   <UiEntity>
     <NpcUtilsUi></NpcUtilsUi>
   </UiEntity>
