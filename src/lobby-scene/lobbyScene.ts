@@ -55,7 +55,7 @@ function startConvoWithNpc(host: LobbyScene, npc: RemoteNpc) {
   sendMsgToAI(chatMessage)
 }
 
-function initArena(host: LobbyScene, force: boolean) {
+export function initArena(host: LobbyScene, force: boolean) {
   const METHOD_NAME = "initArena"
   console.log(FILE_NAME, METHOD_NAME, "ENTRY", force)
 

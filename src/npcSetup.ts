@@ -6,6 +6,7 @@ import { closeAllInteractions } from './utils/connectedUtils'
 import { FollowPathData } from 'dcl-npc-toolkit/dist/types'
 import { Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
+import { genericPrefinedQuestions, openNpcCustomUI } from './NPCs/customUIFunctionality'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -28,7 +29,7 @@ export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
   // createDogeNpc()  
-  createDclGuide()  
+  createDclGuide()
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
 
@@ -70,11 +71,6 @@ function createDogeNpc() {
         onActivate: () => {
           console.log('doge.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, doge)
-          return
-          REGISTRY.activeNPC = doge
-          closeAllInteractions({ exclude: REGISTRY.activeNPC })
-          startThinking(doge, [REGISTRY.askWaitingForResponse])
-
         },
         onWalkAway: () => {
           console.log("NPC", doge.name, 'on walked away')
@@ -128,6 +124,7 @@ function createDogeNpc() {
     }
   )
   doge.name = "npc.doge"
+  doge.predefinedQuestions = genericPrefinedQuestions
   npcLib.followPath(doge.entity, dogePath)
   //doge.showThinking(true)
 
@@ -145,10 +142,7 @@ function createDclGuide() {
         onActivate: () => {
           console.log('dclGuide.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
-          return
-          REGISTRY.activeNPC = dclGuide
-          closeAllInteractions({ exclude: REGISTRY.activeNPC })
-          startThinking(dclGuide, [REGISTRY.askWaitingForResponse])
+          openNpcCustomUI()
         },
         onWalkAway: () => {
           console.log("NPC", dclGuide.name, 'on walked away')
@@ -198,12 +192,11 @@ function createDclGuide() {
       }
       , onEndOfInteraction: () => {
         //showInputOverlay(true)
-
       }
     }
   )
   dclGuide.name = "npc.dclGuide"
-
+  dclGuide.predefinedQuestions = genericPrefinedQuestions
   REGISTRY.allNPCs.push(dclGuide)
 
 }
