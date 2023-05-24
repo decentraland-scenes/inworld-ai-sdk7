@@ -153,10 +153,12 @@ function createSimonas() {
       transformData: { position: Vector3.create(6, 1.5, 6), scale: Vector3.create(1, 1, 1) },
       npcData: {
         type: npcLib.NPCType.CUSTOM,
-        model: 'models/Simone_Anim.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
+        model: 'models/Simone_Anim.glb',
         onActivate: () => {
           console.log('Simonas.NPC activated!')
-          connectNpcToLobby(REGISTRY.lobbyScene, simonas)
+
+          npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
+          //connectNpcToLobby(REGISTRY.lobbyScene, simonas)
           return
           REGISTRY.activeNPC = simonas
           closeAllInteractions({ exclude: REGISTRY.activeNPC })
@@ -166,20 +168,13 @@ function createSimonas() {
           console.log("NPC", simonas.name, 'on walked away')
           const LOOP = false
 
-          //if(doge.npcAnimations.WALK) doge.npc.playAnimation(doge.npcAnimations.WALK.name, LOOP,doge.npcAnimations.WALK.duration)
-          //doge.npc.followPath()
           const NO_LOOP = true
           if (simonas.npcAnimations.IDLE) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.IDLE.name, NO_LOOP, simonas.npcAnimations.IDLE.duration)
         },
         idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: SIMONAS_NPC_ANIMATIONS.WALK.name,
-        //faceUser: true,//continue to face user???
-        //portrait:
-        //{
-        //  path: 'images/portraits/marsha.png', height: 300, width: 300
-        //  , offsetX: -10, offsetY: 0
-        //  , section: { sourceHeight: 384, sourceWidth: 384 }
-        //},
+
+        
         darkUI: true,
         coolDownDuration: 3,
         hoverText: 'Talk',
@@ -189,33 +184,9 @@ function createSimonas() {
         reactDistance: 5,
         continueOnWalkAway: true,
       }
-    },
-    {
-      npcAnimations: DOGE_NPC_ANIMATIONS,
-      thinking: {
-        enabled: true,
-        modelPath: 'models/loading-icon.glb',
-        modelScale: Vector3.create(4, 4, 4),
-        modelOffset: Vector3.create(0, 1, 0),
-        offsetX: 0,
-        offsetY: 1,
-        offsetZ: 0,
-        textScale: Vector3.create(2, 2, 2),
-        textOffset: Vector3.create(0, -1, 0)
-      }
-      , onEndOfRemoteInteractionStream: () => {
-        //TODO: Implement Missing UI
-        console.error(FILE_NAME, "Missing UI", 166)
-        //showInputOverlay(true)
-      }
-      , onEndOfInteraction: () => {
-        //showInputOverlay(true)
-
-      }
     }
   )
   simonas.name = "npc.dclGuide"
 
   REGISTRY.allNPCs.push(simonas)
-
 }
