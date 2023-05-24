@@ -27,7 +27,7 @@ let npcBluntBobby: RemoteNpc
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  // createDogeNpc()  
+  //createDogeNpc()  
   createSimonas()  
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
@@ -70,10 +70,10 @@ function createDogeNpc() {
         onActivate: () => {
           console.log('doge.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, doge)
-          return
+          /*return
           REGISTRY.activeNPC = doge
           closeAllInteractions({ exclude: REGISTRY.activeNPC })
-          startThinking(doge, [REGISTRY.askWaitingForResponse])
+          startThinking(doge, [REGISTRY.askWaitingForResponse])*/
 
         },
         onWalkAway: () => {
@@ -147,6 +147,8 @@ const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
 }
 
 function createSimonas() {
+  
+
   simonas = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/simone" },
     {
@@ -157,12 +159,12 @@ function createSimonas() {
         onActivate: () => {
           console.log('Simonas.NPC activated!')
 
-          npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
+          if (simonas.npcAnimations.HI) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
           //connectNpcToLobby(REGISTRY.lobbyScene, simonas)
-          return
+          /*return
           REGISTRY.activeNPC = simonas
           closeAllInteractions({ exclude: REGISTRY.activeNPC })
-          startThinking(simonas, [REGISTRY.askWaitingForResponse])
+          startThinking(simonas, [REGISTRY.askWaitingForResponse])*/
         },
         onWalkAway: () => {
           console.log("NPC", simonas.name, 'on walked away')
@@ -172,7 +174,7 @@ function createSimonas() {
           if (simonas.npcAnimations.IDLE) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.IDLE.name, NO_LOOP, simonas.npcAnimations.IDLE.duration)
         },
         idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
-        walkingAnim: SIMONAS_NPC_ANIMATIONS.WALK.name,
+        
 
         
         darkUI: true,
@@ -183,6 +185,28 @@ function createSimonas() {
         onlyExternalTrigger: false,
         reactDistance: 5,
         continueOnWalkAway: true,
+      }
+    },
+    {
+      npcAnimations: SIMONAS_NPC_ANIMATIONS,
+      thinking: {
+        enabled: true,
+        textEnabled: false,
+        modelPath: 'models/loading-icon.glb',
+        offsetX: 0,
+        offsetY: 2,
+        offsetZ: 0
+      }
+      , onEndOfRemoteInteractionStream: () => {
+        //TODO: Implement UI
+        console.error(FILE_NAME, "Missing UI", 97)
+        //showInputOverlay(true)
+      }
+      , onEndOfInteraction: () => {
+        //showInputOverlay(true)
+        /*const LOOP = false
+        if (simonas.npcAnimations.WALK) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)*/
+        //npcLib.followPath(doge.entity, dogePath)
       }
     }
   )
