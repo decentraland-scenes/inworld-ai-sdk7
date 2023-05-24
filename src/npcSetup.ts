@@ -21,14 +21,14 @@ const DOGE_NPC_ANIMATIONS: NpcAnimationNameType = {
 }
 
 let doge: RemoteNpc
-let dclGuide: RemoteNpc
+let simonas: RemoteNpc
 let npcBluntBobby: RemoteNpc
 
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
   // createDogeNpc()  
-  createDclGuide()  
+  createSimonas()  
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
 
@@ -134,33 +134,45 @@ function createDogeNpc() {
   REGISTRY.allNPCs.push(doge)
 }
 
-function createDclGuide() {
-  dclGuide = new RemoteNpc(
-    { resourceName: "workspaces/genesis_city/characters/dcl_guide" },
+const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
+  HI: { name: "Hi", duration: 5 },
+  IDLE: { name: "Idle", duration: -1 },
+  TALKING: { name: "Talking", duration: 5 },
+  THINKING: { name: "Thinking", duration: 5 },
+  LOADING: { name: "Loading", duration: 5 },
+  LAUGH: { name: "Laugh", duration: 5 },
+  HAPPY: { name: "Happy", duration: 5 },
+  SAD: { name: "Sad", duration: 5 },
+  SURPRISE: { name: "Surprise", duration: 5 },
+}
+
+function createSimonas() {
+  simonas = new RemoteNpc(
+    { resourceName: "workspaces/genesis_city/characters/simone" },
     {
       transformData: { position: Vector3.create(6, 1.5, 6), scale: Vector3.create(1, 1, 1) },
       npcData: {
         type: npcLib.NPCType.CUSTOM,
-        model: 'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
+        model: 'models/Simone_Anim.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
-          console.log('dclGuide.NPC activated!')
-          connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
+          console.log('Simonas.NPC activated!')
+          connectNpcToLobby(REGISTRY.lobbyScene, simonas)
           return
-          REGISTRY.activeNPC = dclGuide
+          REGISTRY.activeNPC = simonas
           closeAllInteractions({ exclude: REGISTRY.activeNPC })
-          startThinking(dclGuide, [REGISTRY.askWaitingForResponse])
+          startThinking(simonas, [REGISTRY.askWaitingForResponse])
         },
         onWalkAway: () => {
-          console.log("NPC", dclGuide.name, 'on walked away')
+          console.log("NPC", simonas.name, 'on walked away')
           const LOOP = false
 
           //if(doge.npcAnimations.WALK) doge.npc.playAnimation(doge.npcAnimations.WALK.name, LOOP,doge.npcAnimations.WALK.duration)
           //doge.npc.followPath()
           const NO_LOOP = true
-          if (doge.npcAnimations.WAVE) npcLib.playAnimation(dclGuide.entity, dclGuide.npcAnimations.WAVE.name, NO_LOOP, dclGuide.npcAnimations.WAVE.duration)
+          if (doge.npcAnimations.WAVE) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.WAVE.name, NO_LOOP, simonas.npcAnimations.WAVE.duration)
         },
-        idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
-        walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
+        idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
+        walkingAnim: SIMONAS_NPC_ANIMATIONS.WALK.name,
         //faceUser: true,//continue to face user???
         //portrait:
         //{
@@ -202,8 +214,8 @@ function createDclGuide() {
       }
     }
   )
-  dclGuide.name = "npc.dclGuide"
+  simonas.name = "npc.dclGuide"
 
-  REGISTRY.allNPCs.push(dclGuide)
+  REGISTRY.allNPCs.push(simonas)
 
 }
