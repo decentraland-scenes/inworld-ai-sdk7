@@ -5,6 +5,7 @@ import * as npcLib from 'dcl-npc-toolkit'
 import * as utils from '@dcl-sdk/utils'
 import { NpcCreationArgs, createNpc } from "./npcHelper"
 import { closeDialog } from "dcl-npc-toolkit/dist/dialog"
+import { NpcQuestionData } from "./NPCs/customUIFunctionality"
 
 const FILE_NAME: string = "remoteNpc.ts"
 
@@ -19,17 +20,12 @@ export class RemoteNpcConfig {
   id?: string
 }
 
-export type QuestionData = {
-  displayQuestion: string
-  queryToAi: string
-}
-
 export type RemoteNpcThinkingOptions = {
   enabled: boolean
-  modelPath?: string//TODO: this was a GLTF component so figure that out
+  modelPath?: string
   modelScale?: Vector3
   modelOffset?: Vector3
-  textEnabled?:boolean
+  textEnabled?: boolean
   text?: string
   textScale?: Vector3
   textOffset?: Vector3
@@ -39,7 +35,7 @@ export type RemoteNpcThinkingOptions = {
 }
 
 export type RemoteNpcOptions = {
-  loadingIcon?: { enable: boolean }//TODO USE THIS
+  loadingIcon?: { enable: boolean }//TODO: USE THIS
   npcAnimations?: NpcAnimationNameType
   thinking?: RemoteNpcThinkingOptions
   onEndOfRemoteInteractionStream: () => void
@@ -47,10 +43,11 @@ export type RemoteNpcOptions = {
 }
 
 export class RemoteNpc {
-  entity: Entity//TODO: this was NPC (inheriting class to Entity) so figure this out  
+  entity: Entity
   name: string
   config: RemoteNpcConfig
   args?: RemoteNpcOptions
+  predefinedQuestions: NpcQuestionData[] = []
 
   thinkingIconEnabled: boolean = false
   thinkingIconRoot: Entity
@@ -107,7 +104,6 @@ function showThinking(npc: RemoteNpc): void {
   npc.thinkingIcon = engine.addEntity()
   npc.thinkingIconText = engine.addEntity()
 
-
   setParent(npc.entity, npc.thinkingIconRoot)
   setParent(npc.thinkingIconRoot, npc.thinkingIcon)
   setParent(npc.thinkingIconRoot, npc.thinkingIconText)
@@ -126,7 +122,7 @@ function showThinking(npc: RemoteNpc): void {
       scale: Vector3.create(.1, .1, .1)
     })
 
-    if(npc.thinkingIconEnabled && (args.thinking.textEnabled === undefined || args.thinking.textEnabled)){
+    if (npc.thinkingIconEnabled && (args.thinking.textEnabled === undefined || args.thinking.textEnabled)) {
       TextShape.create(npc.thinkingIconText, {
         text: args.thinking?.text ? args.thinking.text : "Thinking..."
       })
@@ -192,11 +188,11 @@ export function endInteraction(npc: RemoteNpc) {
 }
 
 export function endOfRemoteInteractionStream(npc: RemoteNpc) {
-  console.log("NPC.endOfRemoteInteractionStream","ENTRY",npc.name)
-  if(npc.onEndOfRemoteInteractionStream) npc.onEndOfRemoteInteractionStream()
+  console.log("NPC.endOfRemoteInteractionStream", "ENTRY", npc.name)
+  if (npc.onEndOfRemoteInteractionStream) npc.onEndOfRemoteInteractionStream()
 }
 
-export function goodBye(npc: RemoteNpc){
-  console.log("NPC.goodbye","ENTRY",npc.name)
+export function goodBye(npc: RemoteNpc) {
+  console.log("NPC.goodbye", "ENTRY", npc.name)
   npcLib.handleWalkAway(npc.entity)
 }
