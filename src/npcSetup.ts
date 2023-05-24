@@ -135,15 +135,15 @@ function createDogeNpc() {
 }
 
 const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
-  HI: { name: "Hi", duration: 5 },
-  IDLE: { name: "Idle", duration: -1 },
-  TALKING: { name: "Talking", duration: 5 },
-  THINKING: { name: "Thinking", duration: 5 },
-  LOADING: { name: "Loading", duration: 5 },
-  LAUGH: { name: "Laugh", duration: 5 },
-  HAPPY: { name: "Happy", duration: 5 },
-  SAD: { name: "Sad", duration: 5 },
-  SURPRISE: { name: "Surprise", duration: 5 },
+  HI: { name: "Hi", duration: 1 },
+  IDLE: { name: "Idle", duration: 2 },
+  TALKING: { name: "Talking", duration: 1 },
+  THINKING: { name: "Thinking", duration: 1 },
+  LOADING: { name: "Loading", duration: 1 },
+  LAUGH: { name: "Laugh", duration: 1 },
+  HAPPY: { name: "Happy", duration: 1 },
+  SAD: { name: "Sad", duration: 1 },
+  SURPRISE: { name: "Surprise", duration: 1 },
 }
 
 function createSimonas() {
@@ -169,7 +169,7 @@ function createSimonas() {
           //if(doge.npcAnimations.WALK) doge.npc.playAnimation(doge.npcAnimations.WALK.name, LOOP,doge.npcAnimations.WALK.duration)
           //doge.npc.followPath()
           const NO_LOOP = true
-          if (doge.npcAnimations.WAVE) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.WAVE.name, NO_LOOP, simonas.npcAnimations.WAVE.duration)
+          if (simonas.npcAnimations.IDLE) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.IDLE.name, NO_LOOP, simonas.npcAnimations.IDLE.duration)
         },
         idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: SIMONAS_NPC_ANIMATIONS.WALK.name,
