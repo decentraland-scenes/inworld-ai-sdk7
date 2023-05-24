@@ -28,7 +28,7 @@ let npcBluntBobby: RemoteNpc
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  // createDogeNpc()  
+  createDogeNpc()
   createDclGuide()
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
@@ -119,7 +119,7 @@ function createDogeNpc() {
         //showInputOverlay(true)
         const LOOP = false
         if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
-        //npcLib.followPath(doge.entity, dogePath)
+        npcLib.followPath(doge.entity, dogePath)
       }
     }
   )
@@ -146,10 +146,6 @@ function createDclGuide() {
         },
         onWalkAway: () => {
           console.log("NPC", dclGuide.name, 'on walked away')
-          const LOOP = false
-
-          //if(doge.npcAnimations.WALK) doge.npc.playAnimation(doge.npcAnimations.WALK.name, LOOP,doge.npcAnimations.WALK.duration)
-          //doge.npc.followPath()
           const NO_LOOP = true
           if (doge.npcAnimations.WAVE) npcLib.playAnimation(dclGuide.entity, dclGuide.npcAnimations.WAVE.name, NO_LOOP, dclGuide.npcAnimations.WAVE.duration)
         },

@@ -5,7 +5,7 @@ import { NpcQuestionData, sendQuestion } from './customUIFunctionality'
 
 let selectedPredefinedQuestion: NpcQuestionData[] = []
 
-let isVisible: boolean = true
+let isVisible: boolean = false
 
 let aIndex = 0
 let bIndex = 1
