@@ -28,7 +28,7 @@ let npcBluntBobby: RemoteNpc
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  createDogeNpc()
+  // createDogeNpc()
   createDclGuide()
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
@@ -140,6 +140,12 @@ function createDclGuide() {
         type: npcLib.NPCType.CUSTOM,
         model: 'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
+          npcLib.talk(dclGuide.entity, [
+            { text: 'Text A' },
+            { text: 'Text B' },
+            { text: 'Text Z', isEndOfDialog: true }
+          ]) 
+          return
           console.log('dclGuide.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
           openNpcCustomUI()
@@ -151,13 +157,13 @@ function createDclGuide() {
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
-        //faceUser: true,//continue to face user???
-        //portrait:
-        //{
-        //  path: 'images/portraits/marsha.png', height: 300, width: 300
-        //  , offsetX: -10, offsetY: 0
-        //  , section: { sourceHeight: 384, sourceWidth: 384 }
-        //},
+        faceUser: true,//continue to face user??? 
+        portrait:
+        {
+          path: 'images/portraits/marsha.png', height: 300, width: 300
+          , offsetX: -10, offsetY: 0
+          , section: { sourceHeight: 384, sourceWidth: 384 }
+        },
         darkUI: true,
         coolDownDuration: 3,
         hoverText: 'Talk',
