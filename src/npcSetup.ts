@@ -147,12 +147,10 @@ const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
 }
 
 function createSimonas() {
-  
-
   simonas = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/simone" },
     {
-      transformData: { position: Vector3.create(6, 1.5, 6), scale: Vector3.create(1, 1, 1) },
+      transformData: { position: Vector3.create(6, 0, 6), scale: Vector3.create(1, 1, 1) },
       npcData: {
         type: npcLib.NPCType.CUSTOM,
         model: 'models/Simone_Anim.glb',
