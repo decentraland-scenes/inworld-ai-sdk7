@@ -158,22 +158,13 @@ function createSimonas() {
           console.log('Simonas.NPC activated!')
 
           if (simonas.npcAnimations.HI) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
-          //connectNpcToLobby(REGISTRY.lobbyScene, simonas)
-          /*return
-          REGISTRY.activeNPC = simonas
-          closeAllInteractions({ exclude: REGISTRY.activeNPC })
-          startThinking(simonas, [REGISTRY.askWaitingForResponse])*/
         },
         onWalkAway: () => {
           console.log("NPC", simonas.name, 'on walked away')
-          const LOOP = false
 
-          const NO_LOOP = true
-          if (simonas.npcAnimations.IDLE) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.IDLE.name, NO_LOOP, simonas.npcAnimations.IDLE.duration)
+          if (simonas.npcAnimations.SAD) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.SAD.name, true, simonas.npcAnimations.SAD.duration)
         },
         idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
-        
-
         
         darkUI: true,
         coolDownDuration: 3,
@@ -196,16 +187,9 @@ function createSimonas() {
         offsetZ: 0
       }
       , onEndOfRemoteInteractionStream: () => {
-        //TODO: Implement UI
         console.error(FILE_NAME, "Missing UI", 97)
-        //showInputOverlay(true)
       }
-      , onEndOfInteraction: () => {
-        //showInputOverlay(true)
-        /*const LOOP = false
-        if (simonas.npcAnimations.WALK) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)*/
-        //npcLib.followPath(doge.entity, dogePath)
-      }
+      , onEndOfInteraction: () => {}
     }
   )
   simonas.name = "npc.dclGuide"
