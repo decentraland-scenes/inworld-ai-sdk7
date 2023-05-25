@@ -135,15 +135,15 @@ function createDogeNpc() {
 }
 
 const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
-  HI: { name: "Hi", duration: 1 },
-  IDLE: { name: "Idle", duration: 2 },
-  TALKING: { name: "Talking", duration: 1 },
-  THINKING: { name: "Thinking", duration: 1 },
-  LOADING: { name: "Loading", duration: 1 },
-  LAUGH: { name: "Laugh", duration: 1 },
-  HAPPY: { name: "Happy", duration: 1 },
-  SAD: { name: "Sad", duration: 1 },
-  SURPRISE: { name: "Surprise", duration: 1 },
+  HI: { name: "Hi", duration: 2 },
+  IDLE: { name: "Idle", duration: 4 },
+  TALKING: { name: "Talking", duration: 2 },
+  THINKING: { name: "Thinking", duration: 2 },
+  LOADING: { name: "Loading", duration: 2 },
+  LAUGH: { name: "Laugh", duration: 2 },
+  HAPPY: { name: "Happy", duration: 2 },
+  SAD: { name: "Sad", duration: 2 },
+  SURPRISE: { name: "Surprise", duration: 2 },
 }
 
 function createSimonas() {
