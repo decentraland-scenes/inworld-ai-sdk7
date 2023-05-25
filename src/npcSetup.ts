@@ -137,7 +137,7 @@ function createDogeNpc() {
 const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
   HI: { name: "Hi", duration: 2 },
   IDLE: { name: "Idle", duration: 4 },
-  TALKING: { name: "Talking", duration: 2 },
+  TALK: { name: "Talking", duration: 2 },
   THINKING: { name: "Thinking", duration: 2 },
   LOADING: { name: "Loading", duration: 2 },
   LAUGH: { name: "Laugh", duration: 2 },

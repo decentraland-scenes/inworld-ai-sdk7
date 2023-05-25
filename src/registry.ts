@@ -16,7 +16,6 @@ export type NpcAnimationNameType = {
   RUN?: NpcAnimationNameDef
   THINKING?: NpcAnimationNameDef
   TALK?: NpcAnimationNameDef
-  TALKING?: NpcAnimationNameDef
   LOADING?: NpcAnimationNameDef
   LAUGH?: NpcAnimationNameDef
   WAVE?: NpcAnimationNameDef
