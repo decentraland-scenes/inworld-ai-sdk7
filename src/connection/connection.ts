@@ -20,6 +20,7 @@ import { notNull } from "../utils/utilities";
 import { onDisconnect } from "./onConnect";
 import { CUSTOM_CODE_MANUAL_ERROR_MSG, decodeConnectionCode, isErrorCode } from "../utils/connection-utils";
 import { Color4 } from "@dcl/sdk/math";
+import * as ui from 'dcl-ui-toolkit';
 
 const FILE_NAME: string = "connection.ts"
 

@@ -1,5 +1,5 @@
 import { engine, MeshRenderer, Transform } from '@dcl/sdk/ecs'
-import { Vector3 } from '@dcl/sdk/math'
+import { Color4, Vector3 } from '@dcl/sdk/math'
 import { initRegistery, REGISTRY } from './registry'
 import { initDialogs } from './waitingDialog'
 import { setupNPC } from './npcSetup'

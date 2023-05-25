@@ -2,31 +2,39 @@ import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { UiEntity, Label, Button, Input } from '@dcl/sdk/react-ecs'
 import { AtlasTheme, getImageMapping, sourcesComponentsCoordinates } from './uiResources'
 import { NpcQuestionData, sendQuestion } from './customUIFunctionality'
+import { REGISTRY } from '../registry'
+import { getData } from 'dcl-npc-toolkit'
+import { NPCData } from 'dcl-npc-toolkit/dist/types'
 
 let selectedPredefinedQuestion: NpcQuestionData[] = []
 
 let isVisible: boolean = false
+
+let typedQuestion: string = ''
+const placeHolderText: string = 'Type your question here then hit enter...'
+
+let portraitPath: string = ''
 
 let aIndex = 0
 let bIndex = 1
 
 export const customNpcUI = () => {
   return (
-    <UiEntity
+    <UiEntity //Invisible Parent
       uiTransform={{
         positionType: 'absolute',
         width: 926,
         height: 300,
-        position: { bottom: '3%', left: '30%' },
+        position: { bottom: '3%', left: '32%' },
         display: isVisible ? 'flex' : 'none'
       }}
     >
-      <UiEntity
+      <UiEntity //Dialog Holder
         uiTransform={{
           width: '100%',
           height: '100%',
           positionType: 'absolute',
-          justifyContent: 'space-evenly',
+          justifyContent: 'space-around',
           alignItems: 'stretch',
           display: 'flex',
           flexWrap: 'wrap',
@@ -40,7 +48,9 @@ export const customNpcUI = () => {
           textureMode: 'stretch'
         }}
       >
-        <UiEntity uiTransform={{ width: '100%', justifyContent: 'center' }}>
+        <UiEntity //TOP
+          uiTransform={{ width: '100%', justifyContent: 'center' }}
+        >
           <Label value="<b>Ask Me Anything!</b>" fontSize={30}></Label>
           <Button
             value=""
@@ -62,14 +72,17 @@ export const customNpcUI = () => {
             }}
           ></Button>
         </UiEntity>
-        <UiEntity uiTransform={{ width: '100%', justifyContent: 'center' }}>
+        <UiEntity //Input
+          uiTransform={{ width: '100%', justifyContent: 'flex-start' }}
+        >
           <UiEntity
             uiTransform={{
               positionType: 'absolute',
-              width: '80%',
+              width: '75%',
               height: 80,
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              margin: { left: 85 }
             }}
             uiBackground={{
               color: Color4.White()
@@ -81,7 +94,7 @@ export const customNpcUI = () => {
                 color: Color4.Black()
               }}
               fontSize={20}
-              placeholder="Type your question here then hit enter..."
+              placeholder={placeHolderText}
               color={Color4.White()}
               placeholderColor={Color4.White()}
               onChange={(x) => {
@@ -89,8 +102,30 @@ export const customNpcUI = () => {
               }}
             />
           </UiEntity>
+          <Button
+            value="<b>Send</b>"
+            uiTransform={{
+              positionType: 'absolute',
+              position: { right: 20 },
+              width: '120',
+              height: '60',
+              alignSelf: 'center'
+            }}
+            uiBackground={{
+              texture: {
+                src: AtlasTheme.ATLAS_PATH_DARK
+              },
+              color: Color4.White(),
+              textureMode: 'stretch',
+              uvs: getImageMapping({ ...sourcesComponentsCoordinates.buttons.dark })
+            }}
+            fontSize={22}
+            onMouseDown={() => {
+              sendTypeQuestion()
+            }}
+          ></Button>
         </UiEntity>
-        <UiEntity
+        <UiEntity //Options' Buttons
           uiTransform={{
             width: '100%',
             display: 'flex',
@@ -98,14 +133,14 @@ export const customNpcUI = () => {
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignContent: 'space-between',
-            padding: { left: 80, right: 80 }
+            padding: { left: 80, right: 80, top: 10 }
           }}
         >
           <Button
             value={selectedPredefinedQuestion?.length >= 2 ? selectedPredefinedQuestion[aIndex].displayText : ''}
             uiTransform={{
               width: '32%',
-              height: '60%'
+              height: '85%'
             }}
             uiBackground={{
               texture: {
@@ -117,7 +152,7 @@ export const customNpcUI = () => {
             }}
             fontSize={20}
             onMouseDown={() => {
-              askQuestion(bIndex)
+              askQuestion(aIndex)
             }}
           ></Button>
           <Button
@@ -129,7 +164,7 @@ export const customNpcUI = () => {
             uiTransform={{
               display: bIndex >= selectedPredefinedQuestion?.length ? 'none' : 'flex',
               width: '32%',
-              height: '60%'
+              height: '85%'
             }}
             uiBackground={{
               texture: {
@@ -148,7 +183,7 @@ export const customNpcUI = () => {
             value="More Options"
             uiTransform={{
               width: '32%',
-              height: '60%'
+              height: '85%'
             }}
             uiBackground={{
               texture: {
@@ -164,7 +199,9 @@ export const customNpcUI = () => {
             }}
           ></Button>
         </UiEntity>
-        <UiEntity uiTransform={{ width: '100%', justifyContent: 'center' }}>
+        <UiEntity //Footer
+          uiTransform={{ width: '100%', justifyContent: 'center' }}
+        >
           <Label
             value="<b>Disclaimer: Beta. Power by a 3rd party AI. You may receive inaccurate information which is not \nendorsed by the Foundation or the Decentraland community.  Do not share personal information.</b>"
             fontSize={13}
@@ -172,15 +209,16 @@ export const customNpcUI = () => {
         </UiEntity>
       </UiEntity>
 
-      <UiEntity
+      <UiEntity // NPC Portrait
         uiTransform={{
+          display: portraitPath !== '' ? 'flex' : 'none',
           positionType: 'absolute',
           position: { left: -175 },
           width: 300,
           height: 300
         }}
         uiBackground={{
-          texture: { src: 'images/portraits/bela.png' },
+          texture: { src: portraitPath },
           textureMode: 'stretch'
         }}
       ></UiEntity>
@@ -195,12 +233,29 @@ function setVisibility(status: boolean): void {
   }
 }
 
-export function openCustomUI(questions: NpcQuestionData[]) {
+export function openCustomUI() {
+  let questions = REGISTRY.activeNPC.predefinedQuestions
   setVisibility(true)
   selectedPredefinedQuestion = questions
   console.log('QUESTIONS', questions, selectedPredefinedQuestion)
+
+  let npcPortrait = (getData(REGISTRY.activeNPC.entity) as NPCData).portrait
+  if (npcPortrait) {
+    if (typeof npcPortrait === 'string') {
+      portraitPath = npcPortrait
+    } else {
+      portraitPath = npcPortrait.path
+    }
+  }
+
+  console.log('QUESTIONS', 'NPC Portrait', getData(REGISTRY.activeNPC.entity) as NPCData, portraitPath)
+
   aIndex = 0
   bIndex = 1
+}
+
+export function closeCustomUI() {
+  setVisibility(false)
 }
 
 function nextQuestion() {
@@ -224,7 +279,25 @@ function askQuestion(index: number) {
 }
 
 function onEdit(param: string) {
-  console.log('QUESTIONS', 'onEdit', param)
+  // console.log('QUESTIONS', 'onEdit', param)
+  typedQuestion = param
+}
+
+function sendTypeQuestion() {
+  if (!typedQuestion) {
+    console.error('QUESTIONS', "Typed Question can't be undefined")
+    return
+  }
+  if (typedQuestion === placeHolderText) {
+    console.error('QUESTIONS', "value can't match place holder, skipping")
+    return
+  }
+  if (typedQuestion.trim().length <= 0) {
+    console.error('QUESTIONS', "Typed Question can't be Whitespaces/Empty")
+    return
+  }
+  console.log('QUESTIONS', 'Asked Question:', typedQuestion)
+  sendQuestion(typedQuestion)
 }
 
 export function resetInputField() {}

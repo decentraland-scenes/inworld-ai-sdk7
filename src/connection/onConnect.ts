@@ -8,8 +8,8 @@ import * as utils from "@dcl-sdk/utils";
 import { createEntityForSound } from "../utils/utilities";
 import { CONFIG } from "../config";
 import { REGISTRY } from "../registry";
-//import * as ui from "@dcl/ui-scene-utils"; TODO: Replace with custom ui
-//import { showInputOverlay } from "src/aiNpc/npc/customNPCUI"; TODO: Replace with custom ui
+import * as ui from 'dcl-ui-toolkit';
+import { closeCustomUI } from "../NPCs/customUi";
 
 import { Dialog, playAnimation, talk } from "dcl-npc-toolkit";
 import { ButtonData } from 'dcl-npc-toolkit/dist/types'
@@ -116,13 +116,11 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
     console.log("room.msg.inGameMsg", data);
     if (data !== undefined && data.msg === undefined) {
       GAME_STATE.notifyInGameMsg(data);
-      //TODO: implement custom uI 
-      //ui.displayAnnouncement(data, 8, Color4.White(), 60);
+      ui.createComponent(ui.Announcement, { value: data, duration: 8, size: 60, color: Color4.White() })
     } else {
-      //if (message !== undefined && message.msg === undefined) {
       GAME_STATE.notifyInGameMsg(data.msg);
-      //ui.displayAnnouncement(data.msg, data.duration !== undefined ? data.duration : 8, Color4.White(), 60);
-      //}
+      let dataDuration = data.duration !== undefined ? data.duration : 8
+      ui.createComponent(ui.Announcement, { value: data.msg, duration: dataDuration, size: 60, color: Color4.White() })
     }
 
     //ui.displayAnnouncement(`${highestPlayer.name} wins!`, 8, Color4.White(), 60);
@@ -160,8 +158,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       goodBye(REGISTRY.activeNPC)
 
       closeAllInteractions()
-      console.error("Implement Mising UI");
-      //showInputOverlay(false)
+      closeCustomUI()
     }
   }
   const doYouTakeCredit: ButtonData = {
@@ -196,8 +193,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
     }
     const dialog = chatPart.text.createNPCDialog()
 
-    console.error("Implement Mising UI");
-    //showInputOverlay(false)
+    closeCustomUI()
 
     dialog.triggeredByNext = () => {
       const NO_LOOP = true

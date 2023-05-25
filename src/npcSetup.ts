@@ -1,12 +1,11 @@
 import * as npcLib from 'dcl-npc-toolkit'
 import { NpcAnimationNameType, REGISTRY } from './registry'
-import { RemoteNpc, startThinking } from './remoteNpc'
-//import { showInputOverlay } from './customNPCUI' TODO: Implement Custom UI
-import { closeAllInteractions } from './utils/connectedUtils'
+import { RemoteNpc } from './remoteNpc'
 import { FollowPathData } from 'dcl-npc-toolkit/dist/types'
 import { Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
-import { genericPrefinedQuestions, openNpcCustomUI } from './NPCs/customUIFunctionality'
+import { genericPrefinedQuestions } from './NPCs/customUIFunctionality'
+import { openCustomUI } from './NPCs/customUi'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -28,14 +27,14 @@ let npcBluntBobby: RemoteNpc
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  // createDogeNpc()
+  createDogeNpc()
   createDclGuide()
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
 
   for (const p of REGISTRY.allNPCs) {
     //TODO: Set Display text to center
-    console.error("Check: ", FILE_NAME, 184);
+    console.error("Check:" + FILE_NAME + 184);
     //p.npc.dialog.text.hTextAlign = 'center'
   }
 
@@ -78,18 +77,16 @@ function createDogeNpc() {
 
           if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
           npcLib.followPath(doge.entity, dogePath)
-          const NO_LOOP = true
-          //if(doge.npcAnimations.WAVE) doge.npc.playAnimation(doge.npcAnimations.WAVE.name, NO_LOOP,doge.npcAnimations.WAVE.duration)
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
         faceUser: true,//continue to face user???
-        //portrait:
-        //{
-        //  path: 'images/portraits/doge.png', height: 300, width: 300
-        //  , offsetX: -10, offsetY: 0
-        //  , section: { sourceHeight: 256, sourceWidth: 256 }
-        //},
+        portrait:
+        {
+          path: 'images/portraits/doge.png', height: 300, width: 300
+          , offsetX: -10, offsetY: 0
+          , section: { sourceHeight: 256, sourceWidth: 256 }
+        },
         darkUI: true,
         coolDownDuration: 3,
         hoverText: 'WOW',
@@ -111,15 +108,12 @@ function createDogeNpc() {
         offsetZ: 0
       }
       , onEndOfRemoteInteractionStream: () => {
-        //TODO: Implement UI
-        console.error(FILE_NAME, "Missing UI", 97)
-        //showInputOverlay(true)
+        openCustomUI()
       }
       , onEndOfInteraction: () => {
-        //showInputOverlay(true)
-        const LOOP = false
-        if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
-        npcLib.followPath(doge.entity, dogePath)
+        // const LOOP = false
+        // if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
+        // npcLib.followPath(doge.entity, dogePath)
       }
     }
   )
@@ -140,15 +134,8 @@ function createDclGuide() {
         type: npcLib.NPCType.CUSTOM,
         model: 'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
-          npcLib.talk(dclGuide.entity, [
-            { text: 'Text A' },
-            { text: 'Text B' },
-            { text: 'Text Z', isEndOfDialog: true }
-          ]) 
-          return
           console.log('dclGuide.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
-          openNpcCustomUI()
         },
         onWalkAway: () => {
           console.log("NPC", dclGuide.name, 'on walked away')
@@ -188,12 +175,9 @@ function createDclGuide() {
         textOffset: Vector3.create(0, -1, 0)
       }
       , onEndOfRemoteInteractionStream: () => {
-        //TODO: Implement Missing UI
-        console.error(FILE_NAME, "Missing UI", 166)
-        //showInputOverlay(true)
+        openCustomUI()
       }
       , onEndOfInteraction: () => {
-        //showInputOverlay(true)
       }
     }
   )

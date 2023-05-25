@@ -1,13 +1,18 @@
 import { Room } from "colyseus.js";
 
-import { GAME_STATE } from "../state";
 import * as clientState from "../connection/state/client-state-spec";
 import * as serverStateSpec from "../connection/state/server-state-spec";
+import { GAME_STATE } from "../state";
 
 
+import { closeDialog } from "dcl-npc-toolkit/dist/dialog";
+import { closeCustomUI } from "../NPCs/customUi";
 import { REGISTRY } from "../registry";
 import { RemoteNpc, endInteraction, startThinking } from "../remoteNpc";
-import { closeDialog } from "dcl-npc-toolkit/dist/dialog";
+import * as ui from 'dcl-ui-toolkit';
+import { Color4 } from "@dcl/sdk/math";
+
+const FILE_NAME = "connectedUtils.ts"
 
 /**
  * NOTE endInteraction results in player going into STANDING state, need way to resume last action
@@ -29,15 +34,16 @@ export function closeAllInteractions(opts?: { exclude?: RemoteNpc, resumeLastAct
 }
 
 export function sendMsgToAI(msg: serverStateSpec.ChatMessage) {
+  const METHOD_NAME = "sendMsgToAI"
+  console.log(FILE_NAME, METHOD_NAME, "ENTRY", msg)
+
   if (msg === undefined || msg.text.text.trim().length === 0) {
-    console.error("Missing UI Implementation");
-    //TODO: (Custom UI) ui.displayAnnouncement("cannot send empty message")
+    ui.createComponent(ui.Announcement, { value: "cannot send empty message", duration: 8, size: 60, color: Color4.White() })
     return
   }
-  console.log("sendMsgToAI", msg)
+  console.log(FILE_NAME, METHOD_NAME, "Message to Send", msg)
   //hide input
-  console.error("Missing UI Implementation");
-  //TODO: (Custom UI) showInputOverlay(false)
+  closeCustomUI()
   //mark waiting for reply
   startThinking(REGISTRY.activeNPC, [REGISTRY.askWaitingForResponse])
   //wrap it in object

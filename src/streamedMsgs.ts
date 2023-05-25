@@ -47,7 +47,8 @@ export class ChatPart {
     console.log("createNPCDialog.chatpart", this.packet)
 
     if (this.packet == undefined) {
-      debugger
+      console.error(FILE_NAME, "createNPCDialog", "chatpart can't be null");
+      return
     }
     const text = this.packet.text.text
     const dialog: npc.Dialog = {
@@ -107,18 +108,18 @@ export class StreamedMessages {
 
   messageIndex: number = 0
   interactionIndex: number = 0
-  
-  add( part: ChatPart){
-    add(this,part)
+
+  add(part: ChatPart) {
+    add(this, part)
   }
-  next( ){
+  next() {
     return next(this)
   }
-  hasNextAudioNText(){
+  hasNextAudioNText() {
     return hasNextAudioNText(this)
   }
-  _next(incrementCounter: boolean, _startIndex?: number){
-    return _next(this,incrementCounter,_startIndex)
+  _next(incrementCounter: boolean, _startIndex?: number) {
+    return _next(this, incrementCounter, _startIndex)
   }
 }
 
@@ -168,7 +169,7 @@ function hasNextAudioNText(message: StreamedMessages, _startIndex?: number): boo
   let _startIndexTmp = _startIndex ? _startIndex : message.messageIndex
   //debugger
   do {
-    next = _next(message,false, _startIndexTmp)
+    next = _next(message, false, _startIndexTmp)
     //not perfect but better than nothing for now
     //need a way to know when stream sent me enough to work with, text is critical so using that
     hasNext = (next.text !== undefined /*&& next.audio !== undefined*/) || next.endOfInteraction
@@ -237,14 +238,14 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
       const yMin = Math.min(counterInc + maxScanDist, message.streamedMessages.length)
       let yCounter = 0
       const xPos = x
-      let emotionFound:ChatPart
+      let emotionFound: ChatPart
 
       //TODO make scan part of main loop
       scanLoop: for (let y = x; y < yMin; y++) {
         const msg = message.streamedMessages[y]
         //should we be checking same interaction id as above?  can a seperate interation close it?
 
-        if(msg.packet.type === serverState.ChatPacketType.EMOTION){
+        if (msg.packet.type === serverState.ChatPacketType.EMOTION) {
           emotionFound = msg
         }
 
@@ -257,11 +258,11 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
           msgIndexTemp += yCounter
           counterInc += yCounter
 
-          if(!emotion){
+          if (!emotion) {
             //debugger pretty save to assume it matches
             //TODO consider time stamp as part of this?
             emotion = emotionFound
-            console.log(METHOD_NAME,"utterance.end.check FOUND again also picked up an emotion","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",message.messageIndex,"counterInc",counterInc,"loop.y",y,message.streamedMessages.length)
+            console.log(METHOD_NAME, "utterance.end.check FOUND again also picked up an emotion", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", message.messageIndex, "counterInc", counterInc, "loop.y", y, message.streamedMessages.length)
           }
 
 
@@ -277,20 +278,20 @@ function _next(message: StreamedMessages, incrementCounter: boolean, _startIndex
 
       //back check for emotions??
       //debugger
-      if(!emotion && emotionFound){
+      if (!emotion && emotionFound) {
         //debugger pretty save to assume it matches
         //TODO consider time stamp range as part of this?
         const matchedAudioDate = audio && (emotionFound.packet.date === audio.packet.date)
         const matchedTextDate = text && (emotionFound.packet.date === text.packet.date)
 
-        if(matchedAudioDate || matchedTextDate){
-          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion date matched well enough","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",message.messageIndex,"counterInc",counterInc,"loop.x",x,message.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+        if (matchedAudioDate || matchedTextDate) {
+          console.log(METHOD_NAME, "utterance.end.check hit NOT FOUND but found an emotion, is emotion date matched well enough", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", message.messageIndex, "counterInc", counterInc, "loop.x", x, message.streamedMessages.length, "text", text !== undefined, "audio", audio !== undefined)
           emotion = emotionFound
-        }else{
-          console.log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion groupable?","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",message.messageIndex,"counterInc",counterInc,"loop.x",x,message.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+        } else {
+          console.log(METHOD_NAME, "utterance.end.check hit NOT FOUND but found an emotion, is emotion groupable?", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", message.messageIndex, "counterInc", counterInc, "loop.x", x, message.streamedMessages.length, "text", text !== undefined, "audio", audio !== undefined)
         }
         //
-        
+
       }
 
       console.log(METHOD_NAME, "utterance.end.check hit NOT FOUND", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", message.messageIndex, "counterInc", counterInc, "loop.x", x, message.streamedMessages.length, "text", text !== undefined, "audio", audio !== undefined)

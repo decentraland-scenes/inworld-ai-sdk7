@@ -71,6 +71,8 @@ export class RemoteNpc {
     this.args = inArgs
 
     if (inArgs) {
+      this.thinkingIconEnabled = inArgs.thinking !== undefined && inArgs.thinking.enabled
+
       if (inArgs.npcAnimations)
         this.npcAnimations = inArgs?.npcAnimations
 
@@ -83,20 +85,15 @@ export class RemoteNpc {
 
 }
 
-function cancelThinking(npc: RemoteNpc): void {
-  if (npc.thinkingIconRoot) {
-    removeEntityWithChildren(engine, npc.thinkingIconRoot)
-    npc.isThinking = false
-  }
-}
-
 function showThinking(npc: RemoteNpc): void {
 
   if (!npc.thinkingIconEnabled) return
   if (npc.isThinking) return
 
+  console.log('THOUGHTS', "Start Thinking", npc.name);
+
   const defaultWaitingOffsetX = 0
-  const defaultWaitingOffsetY = 2.3
+  const defaultWaitingOffsetY = 3
   const defaultWaitingOffsetZ = 0
   const TEXT_HEIGHT = -1
 
@@ -113,24 +110,25 @@ function showThinking(npc: RemoteNpc): void {
   if (args) {
     npc.thinkingIconEnabled = args.thinking !== undefined && args.thinking.enabled
 
-    Transform.create(npc.thinkingIconRoot, {
-      position: Vector3.create(
-        args.thinking?.offsetX ? args.thinking?.offsetX : defaultWaitingOffsetX
-        , args.thinking?.offsetY ? args.thinking?.offsetY : defaultWaitingOffsetY
-        , args.thinking?.offsetZ ? args.thinking?.offsetZ : defaultWaitingOffsetZ
-      ),
-      scale: Vector3.create(.1, .1, .1)
-    })
+    let iconRootTransform = Transform.getMutable(npc.thinkingIconRoot)
+    iconRootTransform.position = Vector3.create(
+      args.thinking?.offsetX ? args.thinking?.offsetX : defaultWaitingOffsetX
+      , args.thinking?.offsetY ? args.thinking?.offsetY : defaultWaitingOffsetY
+      , args.thinking?.offsetZ ? args.thinking?.offsetZ : defaultWaitingOffsetZ
+    )
+    iconRootTransform.scale = Vector3.create(.1, .1, .1)
 
     if (npc.thinkingIconEnabled && (args.thinking.textEnabled === undefined || args.thinking.textEnabled)) {
-      TextShape.create(npc.thinkingIconText, {
+      TextShape.createOrReplace(npc.thinkingIconText, {
         text: args.thinking?.text ? args.thinking.text : "Thinking..."
       })
 
       if (args.thinking?.modelPath) {
-        GltfContainer.create(npc.thinkingIcon, {
+        GltfContainer.createOrReplace(npc.thinkingIcon, {
           src: args.thinking.modelPath
         })
+        let iconTransform = Transform.getOrCreateMutable(npc.thinkingIcon)
+        iconTransform.scale = Vector3.create(2, 2, 2)
         //this.thinkingIcon.addComponent(new KeepRotatingComponent(Quaternion.Euler(0,25,0)))
       }
       else {
@@ -144,14 +142,22 @@ function showThinking(npc: RemoteNpc): void {
       }
     }
 
-    Transform.create(npc.thinkingIconText, {
-      position: args.thinking?.textOffset ? args.thinking.textOffset : Vector3.create(0, TEXT_HEIGHT, 0),
-      scale: args.thinking?.textScale ? args.thinking?.textScale : Vector3.create(1, 1, 1),
-      rotation: Quaternion.fromEulerDegrees(0, 180, 0)
-    })
+    let iconTextTransform = Transform.getMutable(npc.thinkingIconText)
+    iconTextTransform.position = args.thinking?.textOffset ? args.thinking.textOffset : Vector3.create(0, TEXT_HEIGHT, 0),
+      iconTextTransform.scale = args.thinking?.textScale ? args.thinking?.textScale : Vector3.create(1, 1, 1),
+      iconTextTransform.rotation = Quaternion.fromEulerDegrees(0, 180, 0)
 
   }
   npc.isThinking = true
+}
+
+export function hideThinking(npc: RemoteNpc): void {
+  const METHOD_NAME = "hideThinking"
+  console.log("THOUGHTS", FILE_NAME, METHOD_NAME, "Entry", npc.name);
+  if (npc.thinkingIconRoot) {
+    removeEntityWithChildren(engine, npc.thinkingIconRoot)
+  }
+  npc.isThinking = false
 }
 
 function setParent(parent: Entity, child: Entity): void {
@@ -173,7 +179,7 @@ function infiniteRotation(entity: Entity, start: Vector3, end: Vector3, duration
 
 export function startThinking(npc: RemoteNpc, dialog: npcLib.Dialog[]): void {
   const METHOD_NAME = "startThinking"
-  console.log(FILE_NAME, METHOD_NAME, "Entry", npc.name, dialog);
+  console.log("THOUGHTS", FILE_NAME, METHOD_NAME, "Entry", npc.name, dialog);
   showThinking(npc)
 
   if (npc.npcAnimations.THINKING) npcLib.playAnimation(npc.entity, npc.npcAnimations.THINKING.name, true, npc.npcAnimations.THINKING.duration)
@@ -181,9 +187,9 @@ export function startThinking(npc: RemoteNpc, dialog: npcLib.Dialog[]): void {
 }
 
 export function endInteraction(npc: RemoteNpc) {
-  console.log("NPC.endInteraction", "ENTRY", npc.name)
+  console.log("THOUGHTS", FILE_NAME, "endInteraction", "Entry", npc.name);
   closeDialog(npc.entity)
-  cancelThinking(npc)
+  hideThinking(npc)
   if (npc.onEndOfInteraction) npc.onEndOfInteraction()
 }
 

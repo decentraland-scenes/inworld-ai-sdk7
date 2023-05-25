@@ -1,6 +1,6 @@
 import { REGISTRY } from "../registry"
 import { closeAllInteractions, createMessageObject, sendMsgToAI } from "../utils/connectedUtils"
-import { openCustomUI, resetInputField } from "./customUi"
+import { closeCustomUI, resetInputField } from "./customUi"
 import * as serverStateSpec from '../connection/state/server-state-spec'
 import { GAME_STATE } from "../state"
 import { initArena } from "../lobby-scene/lobbyScene"
@@ -21,10 +21,6 @@ export const genericPrefinedQuestions: NpcQuestionData[] = [
   { displayText: "What is an emote!", aiQuery: "What is an emote!" }
 ]
 
-export function openNpcCustomUI() {
-  openCustomUI(REGISTRY.activeNPC.predefinedQuestions)
-}
-
 export function sendQuestion(questionData: NpcQuestionData | string) {
   const messageQuery = (typeof (questionData) === 'string') ? questionData : questionData.aiQuery
   const message = (typeof (questionData) === 'string') ? questionData : questionData.aiQuery
@@ -43,6 +39,8 @@ export function sendQuestion(questionData: NpcQuestionData | string) {
     initArena(REGISTRY.lobbyScene, false)
     return
   }
+
+  closeCustomUI()
 
   resetInputField()//TODO: missing implementation
 }

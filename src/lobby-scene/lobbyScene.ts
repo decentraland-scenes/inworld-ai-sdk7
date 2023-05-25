@@ -2,7 +2,7 @@ import { REGISTRY } from "../registry";
 import { RemoteNpc, startThinking } from "../remoteNpc";
 import { GAME_STATE } from "../state";
 import { ChatMessage, NpcRoomDataOptions } from "../connection/state/server-state-spec";
-import { createMessageObject, sendMsgToAI } from "../utils/connectedUtils";
+import { closeAllInteractions, createMessageObject, sendMsgToAI } from "../utils/connectedUtils";
 import { joinOrCreateRoomAsync } from "../connection/connect-flow";
 import { disconnect } from "../connection/connection";
 import { Room } from "colyseus.js";
@@ -48,6 +48,9 @@ function startConvoWithNpc(host: LobbyScene, npc: RemoteNpc) {
 
   //do we want this side affect?
   host.pendingConvoWithNPC = undefined
+  host.pendingConvoActionWithNPC = undefined
+
+  closeAllInteractions({ exclude: npc })
 
   const randomMsgs = ["Hello!", "Greetings"]
   const msgText = randomMsgs[Math.floor(Math.random() * randomMsgs.length)]
@@ -73,15 +76,7 @@ export function initArena(host: LobbyScene, force: boolean) {
 
   const roomName = "genesis_plaza"
   console.log(FILE_NAME, METHOD_NAME, "ENTRY", "JoinOrCreate")
-  let promises = joinOrCreateRoomAsync(roomName, connectOptions)
-  promises
-    .then((room) => {
-      console.log(FILE_NAME, METHOD_NAME, "Promise.Then")
-    })
-    .catch(error => {
-      console.log(FILE_NAME, METHOD_NAME, "Promise.Catch")
-    }
-  )
+  joinOrCreateRoomAsync(roomName, connectOptions)
 }
 
 export function onConnectHost(host: LobbyScene, room: Room<NpcGameRoomState>) {
@@ -91,6 +86,7 @@ export function onConnectHost(host: LobbyScene, room: Room<NpcGameRoomState>) {
     startConvoWithNpc(host, host.pendingConvoWithNPC)
     //do we want this side affect?
     host.pendingConvoWithNPC = undefined
+    host.pendingConvoActionWithNPC = undefined
   }
   if (host.pendingConvoActionWithNPC) {
     host.pendingConvoActionWithNPC()
