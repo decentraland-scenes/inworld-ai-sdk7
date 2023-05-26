@@ -1,5 +1,5 @@
-import { Entity, GltfContainer, Material, MeshRenderer, TextShape, Transform, engine, removeEntityWithChildren } from "@dcl/sdk/ecs"
-import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
+import { Entity, GltfContainer, MeshRenderer, TextShape, Transform, engine } from "@dcl/sdk/ecs"
+import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { NpcAnimationNameType } from "./registry"
 import * as npcLib from 'dcl-npc-toolkit'
 import * as utils from '@dcl-sdk/utils'
@@ -90,7 +90,7 @@ function showThinking(npc: RemoteNpc): void {
   if (!npc.thinkingIconEnabled) return
   if (npc.isThinking) return
 
-  console.log('THOUGHTS', "Start Thinking", npc.name);
+  console.log('THOUGHTS', "showThinking", npc.name);
 
   const defaultWaitingOffsetX = 0
   const defaultWaitingOffsetY = 3

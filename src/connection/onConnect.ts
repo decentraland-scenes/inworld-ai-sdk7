@@ -19,7 +19,7 @@ import { closeAllInteractions, createMessageObject, sendMsgToAI } from "../utils
 import { Color4 } from "@dcl/sdk/math";
 import { AudioStream, executeTask } from "@dcl/sdk/ecs";
 import { onConnectHost } from "../lobby-scene/lobbyScene";
-import { endOfRemoteInteractionStream, goodBye } from "../remoteNpc";
+import { endOfRemoteInteractionStream, goodBye, hideThinking } from "../remoteNpc";
 
 //const canvas = ui.canvas
 
@@ -285,6 +285,9 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
 
     const chatPart = new ChatPart(msg)
     streamedMsgs.add(chatPart)
+
+    console.log("onMessage", "hideThinking");
+    if (REGISTRY.activeNPC) hideThinking(REGISTRY.activeNPC)
 
     //TODO find better way to detect reset like when last stream msg was at last?
     if (REGISTRY.activeNPC && (streamedMsgs.started == false || streamedMsgs.waitingForMore) && streamedMsgs.hasNextAudioNText()) {

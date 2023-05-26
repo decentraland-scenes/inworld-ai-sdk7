@@ -11,9 +11,8 @@ const askWaitingForResponse: Dialog = {
   isEndOfDialog: true,
 
   triggeredByNext: () => {
-    console.log("waitingDialog.ts", "Trigger  Next Dialog")
-    // hideThinking(REGISTRY.activeNPC)
-  }  
+    console.log("waitingDialog.ts", "Trigger  Next Dialog", 'hideThinking')
+  }
 }
 
 export function initDialogs() {
