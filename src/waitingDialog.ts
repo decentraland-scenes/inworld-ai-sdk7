@@ -1,5 +1,6 @@
 import { Dialog } from "dcl-npc-toolkit";
 import { REGISTRY } from "./registry";
+import { hideThinking } from "./remoteNpc";
 
 const askWaitingForResponse: Dialog = {
   name: "waiting-for-response",
@@ -11,6 +12,7 @@ const askWaitingForResponse: Dialog = {
 
   triggeredByNext: () => {
     console.log("waitingDialog.ts", "Trigger  Next Dialog")
+    // hideThinking(REGISTRY.activeNPC)
   }  
 }
 

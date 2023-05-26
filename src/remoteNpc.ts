@@ -1,5 +1,5 @@
-import { Entity, GltfContainer, MeshRenderer, TextShape, Transform, engine, removeEntityWithChildren } from "@dcl/sdk/ecs"
-import { Quaternion, Vector3 } from "@dcl/sdk/math"
+import { Entity, GltfContainer, Material, MeshRenderer, TextShape, Transform, engine, removeEntityWithChildren } from "@dcl/sdk/ecs"
+import { Color3, Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { NpcAnimationNameType } from "./registry"
 import * as npcLib from 'dcl-npc-toolkit'
 import * as utils from '@dcl-sdk/utils'
@@ -155,7 +155,7 @@ export function hideThinking(npc: RemoteNpc): void {
   const METHOD_NAME = "hideThinking"
   console.log("THOUGHTS", FILE_NAME, METHOD_NAME, "Entry", npc.name);
   if (npc.thinkingIconRoot) {
-    removeEntityWithChildren(engine, npc.thinkingIconRoot)
+    engine.removeEntity(npc.thinkingIconRoot)
   }
   npc.isThinking = false
 }
