@@ -3,8 +3,9 @@ import ReactEcs, { UiEntity, Label, Button, Input } from '@dcl/sdk/react-ecs'
 import { AtlasTheme, getImageMapping, sourcesComponentsCoordinates } from './uiResources'
 import { NpcQuestionData, sendQuestion } from './customUIFunctionality'
 import { REGISTRY } from '../registry'
-import { getData } from 'dcl-npc-toolkit'
+import { getData, handleWalkAway } from 'dcl-npc-toolkit'
 import { NPCData } from 'dcl-npc-toolkit/dist/types'
+import { endInteraction } from '../remoteNpc'
 
 let selectedPredefinedQuestion: NpcQuestionData[] = []
 
@@ -62,7 +63,7 @@ export const customNpcUI = () => {
               height: 45
             }}
             onMouseDown={() => {
-              setVisibility(false)
+              closeCustomUI()
             }}
             uiBackground={{
               color: Color4.White(),
@@ -228,9 +229,6 @@ export const customNpcUI = () => {
 
 function setVisibility(status: boolean): void {
   isVisible = status
-  if (!status) {
-    console.log('Close Custom Dialog')
-  }
 }
 
 export function openCustomUI() {
@@ -255,7 +253,12 @@ export function openCustomUI() {
 }
 
 export function closeCustomUI() {
+  if (isVisible === false) return
   setVisibility(false)
+  if (REGISTRY.activeNPC) {
+    console.log('DebugSession', 'CLOSEUI => walked away')
+    handleWalkAway(REGISTRY.activeNPC.entity)
+  }
 }
 
 function nextQuestion() {

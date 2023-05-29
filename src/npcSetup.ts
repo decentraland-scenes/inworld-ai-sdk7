@@ -1,11 +1,13 @@
 import * as npcLib from 'dcl-npc-toolkit'
-import { NpcAnimationNameType, REGISTRY } from './registry'
-import { RemoteNpc } from './remoteNpc'
+import { NpcAnimationNameType, REGISTRY, deactivateNPC } from './registry'
+import { RemoteNpc, hideThinking } from './remoteNpc'
 import { FollowPathData } from 'dcl-npc-toolkit/dist/types'
-import { Vector3 } from '@dcl/sdk/math'
+import { Color4, Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
 import { genericPrefinedQuestions } from './NPCs/customUIFunctionality'
-import { openCustomUI } from './NPCs/customUi'
+import { closeCustomUI, openCustomUI } from './NPCs/customUi'
+import { Material, MeshRenderer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
+import { CONFIG, Config } from './config'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -56,6 +58,11 @@ function createDogeNpc() {
     // curve: true,
   }
 
+  for (let index = 0; index < dogePathPoints.length; index++) {
+    const element = dogePathPoints[index];
+    createDeubEntity("Position: " + index.toString(), Vector3.add(element, Vector3.create(0, 0.5, 0)))
+  }
+
   doge = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/doge" },
     {
@@ -73,10 +80,13 @@ function createDogeNpc() {
         },
         onWalkAway: () => {
           console.log("NPC", doge.name, 'on walked away')
+          closeCustomUI()
+          hideThinking(doge)
+          if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
           const LOOP = false
 
-          if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
           npcLib.followPath(doge.entity, dogePath)
+          // if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
@@ -94,7 +104,7 @@ function createDogeNpc() {
         onlyClickTrigger: false,
         onlyExternalTrigger: false,
         reactDistance: 5,
-        continueOnWalkAway: true,
+        continueOnWalkAway: false,
         //dialogCustomTheme: RESOURCES.textures.dialogAtlas,
       }
     },
@@ -138,6 +148,9 @@ function createDclGuide() {
           connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
         },
         onWalkAway: () => {
+          closeCustomUI()
+          hideThinking(dclGuide)
+          if (REGISTRY.activeNPC === dclGuide) REGISTRY.activeNPC = undefined
           console.log("NPC", dclGuide.name, 'on walked away')
           const NO_LOOP = true
           if (doge.npcAnimations.WAVE) npcLib.playAnimation(dclGuide.entity, dclGuide.npcAnimations.WAVE.name, NO_LOOP, dclGuide.npcAnimations.WAVE.duration)
@@ -158,7 +171,7 @@ function createDclGuide() {
         onlyClickTrigger: false,
         onlyExternalTrigger: false,
         reactDistance: 5,
-        continueOnWalkAway: true,
+        continueOnWalkAway: false,
       }
     },
     {
@@ -178,11 +191,24 @@ function createDclGuide() {
         openCustomUI()
       }
       , onEndOfInteraction: () => {
+        
       }
     }
   )
   dclGuide.name = "npc.dclGuide"
   dclGuide.predefinedQuestions = genericPrefinedQuestions
   REGISTRY.allNPCs.push(dclGuide)
+}
 
+function createDeubEntity(text: string, position: Vector3) {
+  if(!CONFIG.PATH_DEBUG) return
+  let test = engine.addEntity()
+  Transform.create(test, {
+    position: position,
+    scale: Vector3.create(.25, .25, .25)
+  })
+  TextShape.create(test, {
+    text: text,
+    textColor: Color4.Black()
+  })
 }

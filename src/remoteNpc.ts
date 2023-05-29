@@ -1,4 +1,4 @@
-import { Entity, GltfContainer, MeshRenderer, TextShape, Transform, engine } from "@dcl/sdk/ecs"
+import { Entity, GltfContainer, MeshRenderer, TextShape, Transform, VisibilityComponent, engine } from "@dcl/sdk/ecs"
 import { Quaternion, Vector3 } from "@dcl/sdk/math"
 import { NpcAnimationNameType } from "./registry"
 import * as npcLib from 'dcl-npc-toolkit'
@@ -80,17 +80,14 @@ export class RemoteNpc {
       this.onEndOfInteraction = inArgs.onEndOfInteraction
     }
 
+    createThinkingEnities(this)
     this.isThinking = false
   }
 
 }
 
-function showThinking(npc: RemoteNpc): void {
-
+function createThinkingEnities(npc: RemoteNpc): void {
   if (!npc.thinkingIconEnabled) return
-  if (npc.isThinking) return
-
-  console.log('THOUGHTS', "showThinking", npc.name);
 
   const defaultWaitingOffsetX = 0
   const defaultWaitingOffsetY = 3
@@ -148,14 +145,33 @@ function showThinking(npc: RemoteNpc): void {
       iconTextTransform.rotation = Quaternion.fromEulerDegrees(0, 180, 0)
 
   }
+
+  VisibilityComponent.create(npc.thinkingIconRoot).visible = false
+  VisibilityComponent.create(npc.thinkingIcon).visible = false
+  VisibilityComponent.create(npc.thinkingIconText).visible = false
+}
+
+function showThinking(npc: RemoteNpc): void {
+
+  if (!npc.thinkingIconEnabled) return
+  if (npc.isThinking) return
+
+  console.log('THOUGHTS', "showThinking", npc.name);
+
+  VisibilityComponent.getMutable(npc.thinkingIconRoot).visible = true
+  VisibilityComponent.getMutable(npc.thinkingIcon).visible = true
+  VisibilityComponent.getMutable(npc.thinkingIconText).visible = true
+
   npc.isThinking = true
 }
 
 export function hideThinking(npc: RemoteNpc): void {
   const METHOD_NAME = "hideThinking"
   console.log("THOUGHTS", FILE_NAME, METHOD_NAME, "Entry", npc.name);
-  if (npc.thinkingIconRoot) {
-    engine.removeEntity(npc.thinkingIconRoot)
+  if (npc.thinkingIconEnabled) {
+    VisibilityComponent.getMutable(npc.thinkingIconRoot).visible = false
+    VisibilityComponent.getMutable(npc.thinkingIcon).visible = false
+    VisibilityComponent.getMutable(npc.thinkingIconText).visible = false
   }
   npc.isThinking = false
 }

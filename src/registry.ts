@@ -21,22 +21,26 @@ export type NpcAnimationNameType = {
 }
 
 class Registry {
-	myNPC!: RemoteNpc
-	activeNPC!: RemoteNpc
-	allNPCs: RemoteNpc[] = []
-  activeNPCSound: Map<string,Entity>=new Map()
+  myNPC!: RemoteNpc
+  activeNPC!: RemoteNpc
+  allNPCs: RemoteNpc[] = []
+  activeNPCSound: Map<string, Entity> = new Map()
   askWaitingForResponse!: Dialog
   lobbyScene!: LobbyScene
   serverTime: number = -1
-  getServerTime(){
-    if(this.serverTime > 0){
+  getServerTime() {
+    if (this.serverTime > 0) {
       return this.serverTime
     }
-    else{
+    else {
       return Date.now()
     }
   }
   onConnectActions?: (room: Room<any>, eventName: string) => void
+}
+
+export function deactivateNPC() {
+  REGISTRY.activeNPC = null
 }
 
 export const REGISTRY = new Registry()
