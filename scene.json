@@ -50,5 +50,8 @@
 		"ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE",
 		"ALLOW_MEDIA_HOSTNAMES"
 	],
+	"allowedMediaHostnames": [
+		"decentraland.org"
+	],
 	"featureToggles": {}
 }

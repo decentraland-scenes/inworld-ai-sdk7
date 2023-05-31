@@ -5,7 +5,6 @@ import { NpcQuestionData, sendQuestion } from './customUIFunctionality'
 import { REGISTRY } from '../registry'
 import { getData, handleWalkAway } from 'dcl-npc-toolkit'
 import { NPCData } from 'dcl-npc-toolkit/dist/types'
-import { endInteraction } from '../remoteNpc'
 
 let selectedPredefinedQuestion: NpcQuestionData[] = []
 
@@ -15,6 +14,7 @@ let typedQuestion: string = ''
 const placeHolderText: string = 'Type your question here then hit enter...'
 
 let portraitPath: string = ''
+let dialogTheme: string = AtlasTheme.ATLAS_PATH_DARK
 
 let aIndex = 0
 let bIndex = 1
@@ -42,7 +42,7 @@ export const customNpcUI = () => {
           flexDirection: 'row'
         }}
         uiBackground={{
-          texture: { src: AtlasTheme.ATLAS_PATH_DARK },
+          texture: { src: dialogTheme },
           uvs: getImageMapping({
             ...sourcesComponentsCoordinates.backgrounds['NPCDialog']
           }),
@@ -67,7 +67,7 @@ export const customNpcUI = () => {
             }}
             uiBackground={{
               color: Color4.White(),
-              texture: { src: AtlasTheme.ATLAS_PATH_DARK },
+              texture: { src: dialogTheme },
               textureMode: 'stretch',
               uvs: getImageMapping({ ...sourcesComponentsCoordinates.icons.closeWLarge })
             }}
@@ -114,7 +114,7 @@ export const customNpcUI = () => {
             }}
             uiBackground={{
               texture: {
-                src: AtlasTheme.ATLAS_PATH_DARK
+                src: dialogTheme
               },
               color: Color4.White(),
               textureMode: 'stretch',
@@ -145,7 +145,7 @@ export const customNpcUI = () => {
             }}
             uiBackground={{
               texture: {
-                src: AtlasTheme.ATLAS_PATH_DARK
+                src: dialogTheme
               },
               color: Color4.White(),
               textureMode: 'stretch',
@@ -169,7 +169,7 @@ export const customNpcUI = () => {
             }}
             uiBackground={{
               texture: {
-                src: AtlasTheme.ATLAS_PATH_DARK
+                src: dialogTheme
               },
               color: Color4.White(),
               textureMode: 'stretch',
@@ -188,7 +188,7 @@ export const customNpcUI = () => {
             }}
             uiBackground={{
               texture: {
-                src: AtlasTheme.ATLAS_PATH_DARK
+                src: dialogTheme
               },
               color: Color4.White(),
               textureMode: 'stretch',
