@@ -40,11 +40,12 @@ export function setupNPC() {
     //p.npc.dialog.text.hTextAlign = 'center'
   }
 
-  console.log("setupNPC", "RETURN")
+  npcLib.showDebug(true)
+  console.log("setupNPC", "RESOLVED")
 }
 
 function createDogeNpc() {
-  const offsetpath = 5
+  const offsetpath = 3
   let dogePathPoints = [
     Vector3.create(offsetpath, .24, offsetpath),
     Vector3.create(offsetpath, .24, 16 - offsetpath),
@@ -76,10 +77,30 @@ function createDogeNpc() {
         model: 'models/dogeNPC_anim4.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
           console.log('doge.NPC activated!')
+          // npcLib.talk(doge.entity,
+          //   [
+          //     {
+          //       text: "Debug Text1"
+          //     },
+          //     {
+          //       text: "Debug Text2"
+          //     },
+          //     {
+          //       text: "Debug Text3"
+          //     },
+          //     {
+          //       text: "Debug Text4"
+          //     },
+          //     {
+          //       text: "Debug TextF",
+          //       isEndOfDialog: true 
+          //     },
+          //   ])
           connectNpcToLobby(REGISTRY.lobbyScene, doge)
         },
         onWalkAway: () => {
-          console.log("NPC", doge.name, 'on walked away')
+          console.log("NPC", doge.name, 'walked away')
+          console.log("TEEHEE", doge.name, 'walked away')
           closeCustomUI(false)//already in walkaway dont trigger second time
           hideThinking(doge)
           if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
@@ -191,7 +212,7 @@ function createDclGuide() {
         openCustomUI()
       }
       , onEndOfInteraction: () => {
-        
+
       }
     }
   )
@@ -201,7 +222,7 @@ function createDclGuide() {
 }
 
 function createDebugEntity(text: string, position: Vector3) {
-  if(!CONFIG.PATH_DEBUG) return
+  if (!CONFIG.PATH_DEBUG) return
   let test = engine.addEntity()
   Transform.create(test, {
     position: position,

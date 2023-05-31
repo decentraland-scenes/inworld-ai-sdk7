@@ -138,8 +138,9 @@ export const customNpcUI = () => {
           }}
         >
           <Button
-            value={selectedPredefinedQuestion?.length >= 2 ? selectedPredefinedQuestion[aIndex].displayText : ''}
+            value={selectedPredefinedQuestion?.length >= 2 ? selectedPredefinedQuestion[aIndex].displayText : 'option1'}
             uiTransform={{
+              display: selectedPredefinedQuestion?.length > 0 ? 'none' : 'flex',
               width: '32%',
               height: '85%'
             }}
@@ -160,7 +161,7 @@ export const customNpcUI = () => {
             value={
               selectedPredefinedQuestion?.length >= 2 && bIndex < selectedPredefinedQuestion?.length
                 ? selectedPredefinedQuestion[bIndex].displayText
-                : ''
+                : 'option2'
             }
             uiTransform={{
               display: bIndex >= selectedPredefinedQuestion?.length ? 'none' : 'flex',
@@ -183,6 +184,7 @@ export const customNpcUI = () => {
           <Button
             value="More Options"
             uiTransform={{
+              display: selectedPredefinedQuestion?.length > 0 ? 'none' : 'flex',
               width: '32%',
               height: '85%'
             }}
