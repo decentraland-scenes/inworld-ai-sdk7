@@ -51,7 +51,9 @@
 		"ALLOW_MEDIA_HOSTNAMES"
 	],
 	"allowedMediaHostnames": [
-		"decentraland.org"
+		"decentraland.org",
+		"rnd-colyseus-service.decentraland.org",
+		"127.0.0.1"
 	],
 	"featureToggles": {}
 }
