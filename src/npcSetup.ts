@@ -60,7 +60,7 @@ function createDogeNpc() {
 
   for (let index = 0; index < dogePathPoints.length; index++) {
     const element = dogePathPoints[index];
-    createDeubEntity("Position: " + index.toString(), Vector3.add(element, Vector3.create(0, 0.5, 0)))
+    createDebugEntity("Position: " + index.toString(), Vector3.add(element, Vector3.create(0, 0.5, 0)))
   }
 
   doge = new RemoteNpc(
@@ -200,7 +200,7 @@ function createDclGuide() {
   REGISTRY.allNPCs.push(dclGuide)
 }
 
-function createDeubEntity(text: string, position: Vector3) {
+function createDebugEntity(text: string, position: Vector3) {
   if(!CONFIG.PATH_DEBUG) return
   let test = engine.addEntity()
   Transform.create(test, {

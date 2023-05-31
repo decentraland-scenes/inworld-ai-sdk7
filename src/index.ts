@@ -1,5 +1,5 @@
 import { engine, MeshRenderer, Transform } from '@dcl/sdk/ecs'
-import { Color4, Vector3 } from '@dcl/sdk/math'
+import { Vector3 } from '@dcl/sdk/math'
 import { initRegistery, REGISTRY } from './registry'
 import { initDialogs } from './waitingDialog'
 import { setupNPC } from './npcSetup'
@@ -10,10 +10,8 @@ import "./polyfill/delcares";
 import { initConfig } from './config'
 import { setUpUI as setupUI } from './ui'
 
-
 // export all the functions required to make the scene work
 export * from '@dcl/sdk'
-
 
 const floor = engine.addEntity()
 MeshRenderer.setBox(floor)
