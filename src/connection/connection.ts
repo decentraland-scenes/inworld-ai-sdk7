@@ -40,8 +40,9 @@ export async function connect(roomName: string, options: any = {}) {
   //realm?.displayName;
 
   options.realm = realm?.realmInfo?.realmName;
-  options.userData = await getUserData({});
-
+  const userData = await getUserData({});
+  if(userData && userData.data) options.userData = userData.data
+  
   //use other playFabUserInfo
   options.playFabData = {}
 
