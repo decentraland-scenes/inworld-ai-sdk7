@@ -80,7 +80,7 @@ function createDogeNpc() {
         },
         onWalkAway: () => {
           console.log("NPC", doge.name, 'on walked away')
-          closeCustomUI()
+          closeCustomUI(false)//already in walkaway dont trigger second time
           hideThinking(doge)
           if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
           const LOOP = false
@@ -148,7 +148,7 @@ function createDclGuide() {
           connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
         },
         onWalkAway: () => {
-          closeCustomUI()
+          closeCustomUI(false)//already in walkaway dont trigger second time
           hideThinking(dclGuide)
           if (REGISTRY.activeNPC === dclGuide) REGISTRY.activeNPC = undefined
           console.log("NPC", dclGuide.name, 'on walked away')
