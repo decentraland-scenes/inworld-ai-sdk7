@@ -140,7 +140,7 @@ export const customNpcUI = () => {
           <Button
             value={selectedPredefinedQuestion?.length >= 2 ? selectedPredefinedQuestion[aIndex].displayText : 'option1'}
             uiTransform={{
-              display: selectedPredefinedQuestion?.length > 0 ? 'none' : 'flex',
+              display: selectedPredefinedQuestion?.length > 0 ? 'flex' : 'none',
               width: '32%',
               height: '85%'
             }}
@@ -184,7 +184,7 @@ export const customNpcUI = () => {
           <Button
             value="More Options"
             uiTransform={{
-              display: selectedPredefinedQuestion?.length > 0 ? 'none' : 'flex',
+              display: selectedPredefinedQuestion?.length > 0 ? 'flex' : 'none',
               width: '32%',
               height: '85%'
             }}
@@ -254,7 +254,7 @@ export function openCustomUI() {
   bIndex = 1
 }
 
-export function closeCustomUI(triggerWalkAway:boolean) {
+export function closeCustomUI(triggerWalkAway: boolean) {
   if (isVisible === false) return
   setVisibility(false)
   if (REGISTRY.activeNPC && triggerWalkAway) {
