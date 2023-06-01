@@ -9,6 +9,7 @@ import { onNpcRoomConnect } from './connection/onConnect'
 import "./polyfill/delcares";
 import { initConfig } from './config'
 import { setUpUI as setupUI } from './ui'
+import { initIdleStateChangedObservable, onIdleStateChangedObservableAdd } from './back-ports/onIdleStateChangedObservables'
 
 // export all the functions required to make the scene work
 export * from '@dcl/sdk'
@@ -33,16 +34,13 @@ REGISTRY.onConnectActions = (room: Room<any>, eventName: string) => {
   //npcConn.onNpcRoomConnect(room)
   onNpcRoomConnect(room)
 }
-
-//docs say will fire after 1 minute
-/*
-onIdleStateChangedObservable.add(({ isIdle }) => {
-  log("Idle State change: ", isIdle)
-  if (isIdle) {
-    //prevent too many connnections for AFKers, it will auto reconnect if u interact with something again
-    REGISTRY.lobbyScene.endBattle()
+initIdleStateChangedObservable() 
+onIdleStateChangedObservableAdd((isIdle:boolean)=>{
+  if(isIdle){ 
+    console.log("index.ts","onIdleStateChangedObservableAdd","player is idle")
+  }else{
+    console.log("index.ts","onIdleStateChangedObservableAdd","player is active")
   }
 })
-*/
 
 setupUI()
