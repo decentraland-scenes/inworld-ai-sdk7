@@ -40,7 +40,6 @@ export function setupNPC() {
     //p.npc.dialog.text.hTextAlign = 'center'
   }
 
-  npcLib.showDebug(true)
   console.log("setupNPC", "RESOLVED")
 }
 
@@ -115,7 +114,7 @@ function createDogeNpc() {
         portrait:
         {
           path: 'images/portraits/doge.png', height: 300, width: 300
-          , offsetX: -10, offsetY: 0
+          , offsetX: -100, offsetY: 0
           , section: { sourceHeight: 256, sourceWidth: 256 }
         },
         darkUI: true,
@@ -181,8 +180,8 @@ function createDclGuide() {
         faceUser: true,//continue to face user??? 
         portrait:
         {
-          path: 'images/portraits/marsha.png', height: 300, width: 300
-          , offsetX: -10, offsetY: 0
+          path: 'images/portraits/marsha.png', height: 320, width: 320
+          , offsetX: -60, offsetY: -40
           , section: { sourceHeight: 384, sourceWidth: 384 }
         },
         darkUI: true,
