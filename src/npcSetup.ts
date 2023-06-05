@@ -8,6 +8,8 @@ import { genericPrefinedQuestions } from './NPCs/customUIFunctionality'
 import { closeCustomUI, openCustomUI } from './NPCs/customUi'
 import { Material, MeshRenderer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
 import { CONFIG, Config } from './config'
+import * as ui from 'dcl-ui-toolkit'
+import { ChatPart } from './streamedMsgs'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -22,6 +24,18 @@ const DOGE_NPC_ANIMATIONS: NpcAnimationNameType = {
   WAVE: { name: "Wave", duration: 4 + ANIM_TIME_PADD },
 }
 
+const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
+  HI: { name: "Hi", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/hi1.png" },
+  IDLE: { name: "Idle", duration: 4, autoStart: undefined, portraitDirectory: "images/portraits/simone/idle1.png" },
+  TALK: { name: "Talking", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/talking1.png" },
+  THINKING: { name: "Thinking", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/interesting1.png" },
+  LOADING: { name: "Loading", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/interesting1.png" },
+  LAUGH: { name: "Laugh", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/laughing1.png" },
+  HAPPY: { name: "Happy", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/happy1.png" },
+  SAD: { name: "Sad", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/sad1.png" },
+  SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/surprise1.png" },
+}
+
 let doge: RemoteNpc
 let simonas: RemoteNpc
 let npcBluntBobby: RemoteNpc
@@ -29,7 +43,7 @@ let npcBluntBobby: RemoteNpc
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  // createDogeNpc()
+  createDogeNpc()
   createSimonas()
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
@@ -83,7 +97,6 @@ function createDogeNpc() {
         },
         onWalkAway: () => {
           console.log("NPC", doge.name, 'walked away')
-          console.log("TEEHEE", doge.name, 'walked away')
           closeCustomUI(false)//already in walkaway dont trigger second time
           hideThinking(doge)
           if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
@@ -139,18 +152,6 @@ function createDogeNpc() {
   REGISTRY.allNPCs.push(doge)
 }
 
-const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
-  HI: { name: "Hi", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/hi1.png" },
-  IDLE: { name: "Idle", duration: 4, autoStart: undefined, portraitDirectory: "images/portaits/simone/idle1.png" },
-  TALK: { name: "Talking", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/talking1.png" },
-  THINKING: { name: "Thinking", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/interesting1.png" },
-  LOADING: { name: "Loading", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/interesting1.png" },
-  LAUGH: { name: "Laugh", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/laughing1.png" },
-  HAPPY: { name: "Happy", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/happy1.png" },
-  SAD: { name: "Sad", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/sad1.png" },
-  SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/surprise1.png" },
-}
-
 function createSimonas() {
   simonas = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/simone" },
@@ -160,9 +161,32 @@ function createSimonas() {
         type: npcLib.NPCType.CUSTOM,
         model: 'models/Simone_Anim.glb',
         onActivate: () => {
-          console.log('dclGuide.NPC activated!')
+          console.log('simonas.NPC activated!')
+
+          // npcLib.talk(simonas.entity, 
+          //   [
+          //     {
+          //       text: 'happy1',
+          //       portrait: {
+          //         path: 'images/portraits/simone/happy1.png'
+          //       }
+          //     },
+          //     {
+          //       text: 'idle1',
+          //       portrait: {
+          //         path: 'images/portraits/simone/idle1.png'
+          //       }
+          //     },
+          //     {
+          //       text: 'sad1',
+          //       portrait: {
+          //         path: 'images/portraits/simone/sad1.png'
+          //       } 
+          //     },
+          // ])
+
           connectNpcToLobby(REGISTRY.lobbyScene, simonas)
-          if (simonas.npcAnimations.HI) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
+          // if (simonas.npcAnimations.HI) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
         },
         onWalkAway: () => {
           closeCustomUI(false)//already in walkaway dont trigger second time
@@ -174,10 +198,10 @@ function createSimonas() {
         },
         idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
-        faceUser: true,//continue to face user??? 
+        faceUser: true,
         portrait:
         {
-          path: 'images/portraits/marsha.png', height: 320, width: 320
+          path: SIMONAS_NPC_ANIMATIONS.IDLE.portraitDirectory, height: 320, width: 320
           , offsetX: -60, offsetY: -40
           , section: { sourceHeight: 384, sourceWidth: 384 }
         },
@@ -195,13 +219,13 @@ function createSimonas() {
       npcAnimations: SIMONAS_NPC_ANIMATIONS,
       thinking: {
         enabled: true,
-        textEnabled: false,
         modelPath: 'models/loading-icon.glb',
         offsetX: 0,
-        offsetY: 2,
+        offsetY: 2.3,
         offsetZ: 0
       }
       , onEndOfRemoteInteractionStream: () => {
+        openCustomUI()
       }
       , onEndOfInteraction: () => { }
     }
