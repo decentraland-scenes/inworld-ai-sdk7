@@ -51,11 +51,14 @@ function createDogeNpc() {
     Vector3.create(16 - offsetpath, .24, 16 - offsetpath),
     Vector3.create(16 - offsetpath, .24, offsetpath)
   ]
-  let dogePath: FollowPathData = {
+  let dogePathData: FollowPathData = {
     path: dogePathPoints,
     totalDuration: dogePathPoints.length * 6,
-    loop: true,
-    // curve: true,
+    loop: true, 
+    onFinishCallback() {
+      console.log("Finished => FollowPath()");
+      npcLib.followPath(doge.entity, dogePathData)
+    }
   }
 
   for (let index = 0; index < dogePathPoints.length; index++) {
@@ -68,7 +71,7 @@ function createDogeNpc() {
     {
       transformData:
       {
-        position: Vector3.clone(dogePath.path[0]),
+        position: Vector3.clone(dogePathData.path[0]),
         scale: Vector3.create(2, 2, 2)
       },
       npcData: {
@@ -86,7 +89,7 @@ function createDogeNpc() {
           if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
           const LOOP = false
 
-          npcLib.followPath(doge.entity, dogePath)
+          npcLib.followPath(doge.entity, dogePathData)
           // if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
@@ -130,7 +133,7 @@ function createDogeNpc() {
   )
   doge.name = "npc.doge"
   doge.predefinedQuestions = genericPrefinedQuestions
-  npcLib.followPath(doge.entity, dogePath)
+  npcLib.followPath(doge.entity, dogePathData)
   //doge.showThinking(true)
 
   REGISTRY.allNPCs.push(doge)
