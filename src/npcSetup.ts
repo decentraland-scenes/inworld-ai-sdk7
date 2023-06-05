@@ -23,14 +23,14 @@ const DOGE_NPC_ANIMATIONS: NpcAnimationNameType = {
 }
 
 let doge: RemoteNpc
-let dclGuide: RemoteNpc
+let simonas: RemoteNpc
 let npcBluntBobby: RemoteNpc
 
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  createDogeNpc()
-  createDclGuide()
+  // createDogeNpc()
+  createSimonas()
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
 
@@ -54,7 +54,7 @@ function createDogeNpc() {
   let dogePathData: FollowPathData = {
     path: dogePathPoints,
     totalDuration: dogePathPoints.length * 6,
-    loop: true, 
+    loop: true,
     onFinishCallback() {
       console.log("Finished => FollowPath()");
       npcLib.followPath(doge.entity, dogePathData)
@@ -139,27 +139,40 @@ function createDogeNpc() {
   REGISTRY.allNPCs.push(doge)
 }
 
-function createDclGuide() {
-  dclGuide = new RemoteNpc(
-    { resourceName: "workspaces/genesis_city/characters/dcl_guide" },
+const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
+  HI: { name: "Hi", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/hi1.png" },
+  IDLE: { name: "Idle", duration: 4, autoStart: undefined, portraitDirectory: "images/portaits/simone/idle1.png" },
+  TALK: { name: "Talking", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/talking1.png" },
+  THINKING: { name: "Thinking", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/interesting1.png" },
+  LOADING: { name: "Loading", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/interesting1.png" },
+  LAUGH: { name: "Laugh", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/laughing1.png" },
+  HAPPY: { name: "Happy", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/happy1.png" },
+  SAD: { name: "Sad", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/sad1.png" },
+  SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined, portraitDirectory: "images/portaits/simone/surprise1.png" },
+}
+
+function createSimonas() {
+  simonas = new RemoteNpc(
+    { resourceName: "workspaces/genesis_city/characters/simone" },
     {
-      transformData: { position: Vector3.create(6, 1.5, 6), scale: Vector3.create(1, 1, 1) },
+      transformData: { position: Vector3.create(6, 0, 6), scale: Vector3.create(1, 1, 1) },
       npcData: {
         type: npcLib.NPCType.CUSTOM,
-        model: 'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
+        model: 'models/Simone_Anim.glb',
         onActivate: () => {
           console.log('dclGuide.NPC activated!')
-          connectNpcToLobby(REGISTRY.lobbyScene, dclGuide)
+          connectNpcToLobby(REGISTRY.lobbyScene, simonas)
+          if (simonas.npcAnimations.HI) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
         },
         onWalkAway: () => {
           closeCustomUI(false)//already in walkaway dont trigger second time
-          hideThinking(dclGuide)
-          if (REGISTRY.activeNPC === dclGuide) REGISTRY.activeNPC = undefined
-          console.log("NPC", dclGuide.name, 'on walked away')
+          hideThinking(simonas)
+          if (REGISTRY.activeNPC === simonas) REGISTRY.activeNPC = undefined
+          console.log("NPC", simonas.name, 'on walked away')
           const NO_LOOP = true
-          if (doge.npcAnimations.WAVE) npcLib.playAnimation(dclGuide.entity, dclGuide.npcAnimations.WAVE.name, NO_LOOP, dclGuide.npcAnimations.WAVE.duration)
+          if (simonas.npcAnimations.SAD) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.SAD.name, true, simonas.npcAnimations.SAD.duration)
         },
-        idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
+        idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
         faceUser: true,//continue to face user??? 
         portrait:
@@ -179,29 +192,24 @@ function createDclGuide() {
       }
     },
     {
-      npcAnimations: DOGE_NPC_ANIMATIONS,
+      npcAnimations: SIMONAS_NPC_ANIMATIONS,
       thinking: {
         enabled: true,
+        textEnabled: false,
         modelPath: 'models/loading-icon.glb',
-        modelScale: Vector3.create(4, 4, 4),
-        modelOffset: Vector3.create(0, 1, 0),
         offsetX: 0,
-        offsetY: 1,
-        offsetZ: 0,
-        textScale: Vector3.create(2, 2, 2),
-        textOffset: Vector3.create(0, -1, 0)
+        offsetY: 2,
+        offsetZ: 0
       }
       , onEndOfRemoteInteractionStream: () => {
-        openCustomUI()
       }
-      , onEndOfInteraction: () => {
-
-      }
+      , onEndOfInteraction: () => { }
     }
   )
-  dclGuide.name = "npc.dclGuide"
-  dclGuide.predefinedQuestions = genericPrefinedQuestions
-  REGISTRY.allNPCs.push(dclGuide)
+
+  simonas.name = "npc.simonas"
+  simonas.predefinedQuestions = genericPrefinedQuestions
+  REGISTRY.allNPCs.push(simonas)
 }
 
 function createDebugEntity(text: string, position: Vector3) {
