@@ -76,25 +76,6 @@ function createDogeNpc() {
         model: 'models/dogeNPC_anim4.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
           console.log('doge.NPC activated!')
-          // npcLib.talk(doge.entity,
-          //   [
-          //     {
-          //       text: "Debug Text1"
-          //     },
-          //     {
-          //       text: "Debug Text2"
-          //     },
-          //     {
-          //       text: "Debug Text3"
-          //     },
-          //     {
-          //       text: "Debug Text4"
-          //     },
-          //     {
-          //       text: "Debug TextF",
-          //       isEndOfDialog: true 
-          //     },
-          //   ])
           connectNpcToLobby(REGISTRY.lobbyScene, doge)
         },
         onWalkAway: () => {
