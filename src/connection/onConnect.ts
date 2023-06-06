@@ -218,7 +218,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
           console.log("Emotions", "Do we have emotions?", nextPart);
           if (nextPart.emotion) {
             //TODO TAG:play-emotion
-            ui.createComponent(ui.Announcement, { value: "got emotion 219-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
+            if (CONFIG.EMOTION_DEBUG) ui.createComponent(ui.Announcement, { value: "got emotion 219-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
           }
 
           const nextDialog = createDialog(nextPart)
@@ -312,7 +312,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       if (nextPart.emotion) {
         //TODO TAG:play-emotion 
         console.log("Emotions", "DisplayEmotion", nextPart.emotion.packet.emotions.behavior, "=>", emotion);
-        ui.createComponent(ui.Announcement, { value: "got emotion 308-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
+        if (CONFIG.EMOTION_DEBUG) ui.createComponent(ui.Announcement, { value: "got emotion 308-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
       }
       if (dialog) {
         talk(REGISTRY.activeNPC.entity, [dialog]);
