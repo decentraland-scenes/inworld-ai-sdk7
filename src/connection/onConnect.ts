@@ -215,14 +215,27 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
         //debugger 
         if (nextPart.text) {
 
-          console.log("Emotions", "Do we have emotions?", nextPart);
-          if (nextPart.emotion) {
+          const nextDialog = createDialog(nextPart)
+
+          let hasEmotion = nextPart.emotion ? true : false
+          console.log("Emotions", "Do we have emotions?", hasEmotion, ':', nextPart);
+
+          let emotion = getNpcEmotion(nextPart.emotion)
+
+          dialog.portrait = { path: emotion.portraitPath }
+          console.log('Emotions', 'Portrait:', dialog.portrait);
+
+          if (hasEmotion) {
             //TODO TAG:play-emotion
-            if (CONFIG.EMOTION_DEBUG) ui.createComponent(ui.Announcement, { value: "got emotion 219-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
+            console.log("Emotions", "DisplayEmotion", nextPart.emotion.packet.emotions.behavior, "=>", emotion);
+            if (CONFIG.EMOTION_DEBUG) ui.createComponent(ui.Announcement, { value: "got emotion 224-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
           }
 
-          const nextDialog = createDialog(nextPart)
           talk(REGISTRY.activeNPC.entity, [nextDialog]);
+
+          console.log('Emotions', 'Animation:', emotion.name);
+          playAnimation(REGISTRY.activeNPC.entity, emotion.name, true, emotion.duration)
+
           if (true) {//audio optional
             if (nextPart.audio && nextPart.audio.packet.audio.chunk) {
               console.log("onMessage.structuredMsg.audio", nextPart.audio);
@@ -305,18 +318,23 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       streamedMsgs.started = true
       streamedMsgs.waitingForMore = false
       const dialog = createDialog(nextPart)
+
       let hasEmotion = nextPart.emotion ? true : false
       console.log("Emotions", "Do we have emotions?", hasEmotion, ":", nextPart);
+
       let emotion = getNpcEmotion(nextPart.emotion)
+
       dialog.portrait = { path: emotion.portraitPath }
-      if (nextPart.emotion) {
+      console.log('Emotions', 'Portrait:', dialog.portrait);
+
+      if (hasEmotion) {
         //TODO TAG:play-emotion 
         console.log("Emotions", "DisplayEmotion", nextPart.emotion.packet.emotions.behavior, "=>", emotion);
-        if (CONFIG.EMOTION_DEBUG) ui.createComponent(ui.Announcement, { value: "got emotion 308-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
+        if (CONFIG.EMOTION_DEBUG) ui.createComponent(ui.Announcement, { value: "got emotion 318-\n" + JSON.stringify(nextPart.emotion.packet.emotions), duration: 5, size: 60, color: Color4.White() }).show(5)
       }
       if (dialog) {
         talk(REGISTRY.activeNPC.entity, [dialog]);
-        console.log('Emotions', 'debug', dialog.portrait);
+        console.log('Emotions', 'Animation', dialog.portrait);
         playAnimation(REGISTRY.activeNPC.entity, emotion.name, true, emotion.duration)
       } else {
         console.log("structuredMsg", "createDialog", "no dialog to show,probably just a control msg", dialog, "chatPart", chatPart, "nextPart", nextPart)
