@@ -25,15 +25,15 @@ const DOGE_NPC_ANIMATIONS: NpcAnimationNameType = {
 }
 
 const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
-  HI: { name: "Hi", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/hi1.png" },
-  IDLE: { name: "Idle", duration: 4, autoStart: undefined, portraitDirectory: "images/portraits/simone/idle1.png" },
-  TALK: { name: "Talking", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/talking1.png" },
-  THINKING: { name: "Thinking", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/interesting1.png" },
-  LOADING: { name: "Loading", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/interesting1.png" },
-  LAUGH: { name: "Laugh", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/laughing1.png" },
-  HAPPY: { name: "Happy", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/happy1.png" },
-  SAD: { name: "Sad", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/sad1.png" },
-  SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined, portraitDirectory: "images/portraits/simone/surprise1.png" },
+  HI: { name: "Hi", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/hi1.png" },
+  IDLE: { name: "Idle", duration: 4, autoStart: undefined, portraitPath: "images/portraits/simone/idle1.png" },
+  TALK: { name: "Talking", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/talking1.png" },
+  THINKING: { name: "Thinking", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/interesting1.png" },
+  LOADING: { name: "Loading", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/interesting1.png" },
+  LAUGH: { name: "Laugh", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/laughing1.png" },
+  HAPPY: { name: "Happy", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/happy1.png" },
+  SAD: { name: "Sad", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/sad1.png" },
+  SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/surprise1.png" },
 }
 
 let doge: RemoteNpc
@@ -201,7 +201,7 @@ function createSimonas() {
         faceUser: true,
         portrait:
         {
-          path: SIMONAS_NPC_ANIMATIONS.IDLE.portraitDirectory, height: 320, width: 320
+          path: SIMONAS_NPC_ANIMATIONS.IDLE.portraitPath, height: 320, width: 320
           , offsetX: -60, offsetY: -40
           , section: { sourceHeight: 384, sourceWidth: 384 }
         },

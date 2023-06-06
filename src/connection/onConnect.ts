@@ -308,7 +308,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       let hasEmotion = nextPart.emotion ? true : false
       console.log("Emotions", "Do we have emotions?", hasEmotion, ":", nextPart);
       let emotion = getNpcEmotion(nextPart.emotion)
-      dialog.portrait = { path: emotion.portraitDirectory }
+      dialog.portrait = { path: emotion.portraitPath }
       if (nextPart.emotion) {
         //TODO TAG:play-emotion 
         console.log("Emotions", "DisplayEmotion", nextPart.emotion.packet.emotions.behavior, "=>", emotion);

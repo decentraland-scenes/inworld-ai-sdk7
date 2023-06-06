@@ -30,7 +30,7 @@ export function getNpcEmotion(emotion: ChatPart) {
 
   let npcData = (npcLib.getData(activeNpc.entity) as NPCData)
   const defaultEmotion: NpcAnimationNameDef = {
-    portraitDirectory: REGISTRY.activeNPC.args.npcAnimations.IDLE.portraitDirectory,
+    portraitPath: REGISTRY.activeNPC.args.npcAnimations.IDLE.portraitPath,
     name: REGISTRY.activeNPC.args.npcAnimations.IDLE.name,
     duration: 2
   }
