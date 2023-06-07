@@ -29,10 +29,15 @@ export function getNpcEmotion(emotion: ChatPart) {
   const activeNpc = REGISTRY.activeNPC;
 
   let npcData = (npcLib.getData(activeNpc.entity) as NPCData)
+  
   const defaultEmotion: NpcAnimationNameDef = {
     portraitPath: REGISTRY.activeNPC.args.npcAnimations.IDLE.portraitPath,
     name: REGISTRY.activeNPC.args.npcAnimations.IDLE.name,
     duration: 2
+  }
+  //FIXME if has no portrait what to we do????
+  if(!REGISTRY.activeNPC.args.npcAnimations.IDLE.portraitPath){
+    console.log("WARNING","getNpcEmotion","no portrait path")
   }
 
   if (!emotion) {

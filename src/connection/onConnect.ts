@@ -222,7 +222,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
 
           let emotion = getNpcEmotion(nextPart.emotion)
 
-          dialog.portrait = { path: emotion.portraitPath }
+          if(emotion.portraitPath) dialog.portrait = { path: emotion.portraitPath }
           console.log('Emotions', 'Portrait:', dialog.portrait);
 
           if (hasEmotion) {
@@ -324,7 +324,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
 
       let emotion = getNpcEmotion(nextPart.emotion)
 
-      dialog.portrait = { path: emotion.portraitPath }
+      if(emotion.portraitPath) dialog.portrait = { path: emotion.portraitPath }
       console.log('Emotions', 'Portrait:', dialog.portrait);
 
       if (hasEmotion) {
