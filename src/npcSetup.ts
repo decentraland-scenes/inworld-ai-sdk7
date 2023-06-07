@@ -6,7 +6,7 @@ import { Color4, Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
 import { genericPrefinedQuestions } from './NPCs/customUIFunctionality'
 import { closeCustomUI, openCustomUI } from './NPCs/customUi'
-import { Material, MeshRenderer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
+import { ColliderLayer, Material, MeshRenderer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
 import { CONFIG, Config } from './config'
 import * as ui from 'dcl-ui-toolkit'
 import { ChatPart } from './streamedMsgs'
@@ -36,14 +36,15 @@ const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
   SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/surprise1.png" },
 }
 
-let doge: RemoteNpc
-let simonas: RemoteNpc
+
+
+
 let npcBluntBobby: RemoteNpc
 
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  createDogeNpc()
+  createDogeNpc() 
   createSimonas()
 
   if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
@@ -58,6 +59,7 @@ export function setupNPC() {
 }
 
 function createDogeNpc() {
+  let doge: RemoteNpc
   const offsetpath = 3
   let dogePathPoints = [
     Vector3.create(offsetpath, .24, offsetpath),
@@ -90,7 +92,11 @@ function createDogeNpc() {
       },
       npcData: {
         type: npcLib.NPCType.CUSTOM,
-        model: 'models/dogeNPC_anim4.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
+        model: {
+          src:'models/dogeNPC_anim4.glb',
+          //visibleMeshesCollisionMask: ColliderLayer.CL_POINTER | ColliderLayer.CL_PHYSICS,
+          //invisibleMeshesCollisionMask: ColliderLayer.CL_NONE,
+        },//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
         onActivate: () => {
           console.log('doge.NPC activated!')
           connectNpcToLobby(REGISTRY.lobbyScene, doge)
@@ -102,7 +108,7 @@ function createDogeNpc() {
           if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
           const LOOP = false
 
-          npcLib.followPath(doge.entity, dogePathData)
+          //npcLib.followPath(doge.entity, dogePathData)
           // if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
@@ -146,20 +152,25 @@ function createDogeNpc() {
   )
   doge.name = "npc.doge"
   doge.predefinedQuestions = genericPrefinedQuestions
-  npcLib.followPath(doge.entity, dogePathData)
+  //npcLib.followPath(doge.entity, dogePathData)
   //doge.showThinking(true)
 
   REGISTRY.allNPCs.push(doge)
 }
 
 function createSimonas() {
+  let simonas: RemoteNpc
   simonas = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/simone" },
     {
       transformData: { position: Vector3.create(6, 0, 6), scale: Vector3.create(1, 1, 1) },
       npcData: {
-        type: npcLib.NPCType.CUSTOM,
-        model: 'models/Simone_Anim.glb',
+        type: npcLib.NPCType.CUSTOM, 
+        model: {
+          src:'models/Simone_Anim_Collider.glb',
+          visibleMeshesCollisionMask: ColliderLayer.CL_NONE,
+          invisibleMeshesCollisionMask: ColliderLayer.CL_POINTER | ColliderLayer.CL_PHYSICS
+        },//'models/Simone_Anim.glb',
         onActivate: () => {
           console.log('simonas.NPC activated!')
 
@@ -197,7 +208,7 @@ function createSimonas() {
           if (simonas.npcAnimations.SAD) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.SAD.name, true, simonas.npcAnimations.SAD.duration)
         },
         idleAnim: SIMONAS_NPC_ANIMATIONS.IDLE.name,
-        walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
+        //walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
         faceUser: true,
         portrait:
         {
