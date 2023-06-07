@@ -108,7 +108,7 @@ function createDogeNpc() {
           if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
           const LOOP = false
 
-          //npcLib.followPath(doge.entity, dogePathData)
+          npcLib.followPath(doge.entity, dogePathData)
           // if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
@@ -152,7 +152,7 @@ function createDogeNpc() {
   )
   doge.name = "npc.doge"
   doge.predefinedQuestions = genericPrefinedQuestions
-  //npcLib.followPath(doge.entity, dogePathData)
+  npcLib.followPath(doge.entity, dogePathData)
   //doge.showThinking(true)
 
   REGISTRY.allNPCs.push(doge)
