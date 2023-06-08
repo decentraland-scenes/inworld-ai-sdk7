@@ -26,7 +26,7 @@
   "dependencies": {
     "@dcl-sdk/utils": "^1.1.2",
     "colyseus.js": "0.14.15-alpha.0",
-    "dcl-npc-toolkit": "^1.1.2-20230602175626.commit-fe68218",
+    "dcl-npc-toolkit": "^1.1.2-20230608172751.commit-11d3b8b",
     "dcl-ui-toolkit": "^0.9.1"
   },
   "bundleDependencies": [
