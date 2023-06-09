@@ -1,255 +1,153 @@
-# SDK7 Test scene
+# InWorld.ai Example
 
-This scene is built with the SDK7 in alpha state.
+This is an example scene to create AI NPCs SDL7 backed by [InWorlds.ai](https://inworld.ai/arcade) service
 
-# New ECS for SDK7
+Deployed here
 
-## Entities
-An Entity is just an ID. It is an abstract concept not represented by any data structure. There is no "class Entity". Just a number that is used as a reference to group different components.
+Zone (InworldAiSdk6.dcl.eth)
+[ https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth](https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth)
 
-```ts
-const myEntity = engine.addEntity()
-console.console.log(myEntity) // 100
+## Code
 
-// Remove Entity
-engine.removeEntity(myEntity)
+RemoteNpc (`src/remoteNpc.ts`) is a new class that wraps the existing NPC object. See for more details there [https://github.com/decentraland-scenes/dcl-npc-toolkit](https://github.com/decentraland-scenes/dcl-npc-toolkit).
+
+It adds the additional configuration for an NPC that talks to a remote server for the dialog.
+
+StreamedMessage (`src/streamedMsgs.ts`) is a utilty that implements an Iterator pattern to enable the scene to group messages from InWorld and use them with the NPC Dialog in a serial and squential way.
+
+```
+received stream of all InWorld messages all at once
+show utterance1
+player clicks next
+show utterance2
+player clicks next
 ```
 
-> Note: Note that it's no longer necessary to separately create an entity and then add it to the engine, this is all done in a single act.
+## Customize
 
-## Components
+`src/NPCs/customUi.ts` creates a custom 2D UI to enable the player to type a question for the NPC. Customize this as you want
 
-The component is just a data container, WITHOUT any functions.
+<img src='screenshots/custom-ui-prompt.png'/>
 
-To add a component to an entity, the entry point is now the component type, not the entity.
+## Configuration
 
-```ts
-Transform.create(myEntity, <params>)
+### Scene
+
+You may want to configure endpoints for your local environment in the instance where you do not want or need to run Colyseus and login server locally
+
+Found in `src/config.ts` there are variables in the following format so you could have configurations for multiple environments
+
+```
+const VARIABLE: Record<string, string> = {
+  local: "local value",
+  dev: "dev value",
+  stg: "staging value",
+  prd: "production value",
+};
 ```
 
-This is different from how the syntax was in SDK6:
+`ENV` - The environment for which values are to be used (local,dev,prod,etc.)
 
-```ts
-// OLD Syntax
-myEntity.addComponent(Transform)
+`COLYSEUS_ENDPOINT_URL` - Websocker endpoint
+
+```
+const COLYSEUS_ENDPOINT_URL: Record<string, string> = {
+  local: "ws://127.0.0.1:2567",  //default local server port
+  dev: "YOUR-DEV-ENDPOINT-HERE",
+  stg: "YOUR-STG-ENDPOINT-HERE",
+  prd: "YOUR-PROD-ENDPOINT-HERE",
+};
+
 ```
 
+### Should you make your own InWorld Scene and Characters
 
+src/npcSetup.ts
 
-
-### Base Components
-
-Base components already come packed as part of the SDK. Most of them interact directly with the renderer in some way. This is the full list of currently supported base components:
-
-- Transform
-- Animator
-- Material
-- MeshRenderer
-- MeshCollider
-- AudioSource
-- AudioStream
-- AvatarAttach
-- AvatarModifierArea
-- AvatarShape
-- Billboard
-- CameraMode
-- CameraModeArea
-- GltfContainer
-- NftShape
-- PointerEventsResult
-- PointerHoverFeedback
-- PointerLock
-- Raycast
-- RaycastResult
-- TextShape
-- VisibilityComponent
-
-
-```ts
-const entity = engine.addEntity()
-Transfrom.create(entity, {
-  position: Vector3.create(12, 1, 12)
-  scale: Vector3.One(),
-  rotation: Quaternion.Identity()
-})
-GltfContainer.create(zombie, {
-  withCollisions: true,
-  isPointerBlocker: true,
-  visible: true,
-  src: 'models/zombie.glb'
-})
 ```
+const myRemoteNPC = new RemoteNpc(
+    {resourceName:"workspaces/{SCENE_NAME_HERE/characters/{CHARACTER_NAME_HERE}"}
 
+    //CONFIG FOR NPC (from dcl-npc-tookit)
+    {
+        type: npcLib.NPCType.CUSTOM,
+        model: {},
+        onActivate: () => {}
+    },
 
-### Custom Components
-
-Each component must have a unique number ID. If a number is repeated, the engine or another player receiving updates might apply changes to the wrong component. Note that numbers 1-2000 are reserved for the base components.
-
-When creating a custom component you declare the schema of the data to be stored in it. Every field in a component MUST belong to one of the built-in special schemas provided as part of the SDK. These special schemas include extra functionality that allows them to be serialized/deserialized.
-
-Currently, the names of these special schemas are:
-#### Primitives
-1. `Schemas.Boolean`: true or false (serialized as a Byte)
-2. `Schemas.String`: UTF8 strings (serialized length and content)
-3. `Schemas.Float`: single precission float
-4. `Schemas.Double`: double precision float
-5. `Schemas.Byte`: a single byte, integer with range 0..255
-6. `Schemas.Short`: 16 bits signed-integer with range -32768..32767
-7. `Schemas.Int`: 32 bits signed-integer with range -2³¹..(2³¹-1)
-8. `Schemas.Int64`: 64 bits signed-integer
-9. `Schemas.Number`: an alias to Schemas.Float
-
-#### Specials
-10. `Schemas.Entity`: a wrapper to int32 that casts the type to `Entity`
-11. `Schemas.Vector3`: a Vector3 with { x, y, z }
-12. `Schemas.Quaternion`: a Quaternion with { x, y, z, w}
-13. `Schemas.Color3`: a Color3 with { r, g, b }
-14. `Schemas.Color4`: a Colo4 with { r, g, b, a }
-
-#### Schema generator
-15. `Schemas.Enum`: passing the serialization Schema and the original Enum as generic
-16. `Schemas.Array`: passing the item Schema
-17. `Schemas.Map`: passing a Map with Schemas as values
-18. `Schemas.Optional`: passing the schema to serialize
-
-Below are some examples of how these schemas can be declared.
-
-```ts
-const object = Schemas.Map({ x: Schemas.Int }) // { x: 1 }
-
-const array = Schemas.Map(Schemas.Int) // [1,2,3,4]
-
-const objectArray = Schemas.Array(
-  Schemas.Map({ x: Schemas.Int })
-) // [{ x: 1 }, { x: 2 }]
-
-const BasicSchemas = Schemas.Map({
-  x: Schemas.Int,
-  y: Schemas.Float,
-  text: Schemas.String,
-  flag: Schemas.Boolean
-  }) // { x: 1, y: 1.412, text: 'ecs 7 text', flag: true }
-
-const VelocitySchema = Schemas.Map({
-  x: Schemas.Float,
-  y: Schemas.Float,
-  z: Schemas.Float
-})
-```
-
-To then create a custom component using one of these schemas, use the following syntax:
-
-```ts
-export const myCustomComponent = engine.defineComponent(MyDataSchema, ComponentID)
-```
-
-
-
-For contrast, below is an example of how components were constructed prior to SDK 7.
-
-```ts
-/**
- * OLD SDK
- */
-
-// Define Component
-@Component("velocity")
-export class Velocity extends Vector3 {
-  constructor(x: number, y: number, z: number) {
-    super(x, y, z)
-  }
-}
-// Create entity
-const wheel = new Entity()
-
-// Create instance of component with default values
-wheel.addComponent(new WheelSpin())
-
-/**
- * ECS 7
- */
-// Define Component
-const VelocitySchema = Schemas.Map({
-  x: Schemas.Float,
-  y: Schemas.Float,
-  z: Schemas.Float
-})
-const COMPONENT_ID = 2008
-const VelocityComponent = engine.defineComponent(Velocity, COMPONENT_ID)
-// Create Entity
-const entity = engine.addEntity()
-
-// Create instance of component
-VelocityComponent.create(entity, { x: 1, y: 2.3, z: 8 })
-
-// Remove instance of a component
-VelocityComponent.deleteFrom(entity)
-```
-
-
-
-## Systems
-
-Systems are pure & simple functions.
-All your logic comes here.
-A system might hold data which is relevant to the system itself, but no data about the entities it processes.
-
-To add a system, all you need to do is define a function and add it to the engine. The function may optionally include a `dt` parameter with the delay since last frame, just like in prior versions of the SDK.
-
-```ts
-// Basic system
-function mySystem() {
-  console.log("my system is running")
-}
-
-engine.addSystem(mySystem)
-
-// System with dt
-function mySystemDT(dt: number) {
-  console.log("time since last frame:  ", dt)
- }
-
-engine.addSystem(mySystemDT)
-```
-
-
-### Query components
-
-The way to group/query the components inside systems is using the method getEntitiesWith.
-`engine.getEntitiesWith(...components)`.
-
-
-```ts
-function physicsSystem(dt: number) {
-  for (const [entity, transform, velocity] of engine.getEntitiesWith(Transform, Velocity)) {
-    // transform & velocity are read only components.
-    if (transform.position.x === 10) {
-      // To update a component, you need to call the `.mutable` method
-      const mutableVelocity = VelocityComponent.getMutable(entity)
-      mutableVelocity.x += 1
+    //ADDITIONAL CONFIG FOR REMOTE NPC
+    {
+      predefinedQuestions: NpcQuestionData[],
+      npcAnimations:DOGE_NPC_ANIMATIONS,
+      thinking:{
+        enabled:true,
+        model: new GLTFShape('models/loading-icon.glb'),
+        offsetX: 0,
+        offsetY: 2 ,
+        offsetZ: 0
+      }
+      ,onEndOfRemoteInteractionStream: ()=>{
+        showInputOverlay(true)
+      }
+      ,onEndOfInteraction: ()=>{
+        //end of interaction
+      }
     }
   }
-}
-
-// Add system to the engine
-engine.addSystem(physicsSystem)
-
-// Remove system
-engine.removeSystem(physicsSystem)
 ```
 
-## Mutability
+## Try it out
 
-Mutability is now an important distinction. We can choose to deal with mutable or with immutable versions of a component. We should use `getMutable` only when we plan to make changes to a component. Dealing with immutable versions of components results in a huge gain in performance.
+#### Run Colyseus (Multiplayer server) (seperate tab)
 
-The `.get()` function in a component returns an immutable version of the component. You can only read its values, but can't change any of the properties on it.
+Optional...if you only want to see the code in action no need run the proxy server. The example scene is pointed our Genesis Plaza proxy server so you should be able to fully run these example scene without the server side. Should you choose create your own scene and characters you will need to run your own server.
 
-```ts
-const immutableTransform = Transform.get(myEntity)
+To create your own scene and characters follow the documentation found here [https://docs.inworld.ai/docs/intro](https://docs.inworld.ai/docs/intro). Once you are finished run your local server.
+
+Instructions here [https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme](https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme)
+
+Default endpoint can be found at http://localhost:2567/
+
+In the Decentrlaand scene code Change in src/config.ts to point at your local
+
+```
+const ENV = "prd"
+to
+const ENV = "local"
 ```
 
-To fetch the mutable version of a component, call it via `ComponentDefinition.getMutable()`. For example:
+> This will make is so your scene uses local: "ws://127.0.0.1:2567" from the COLYSEUS_ENDPOINT_URL varaible
 
-```ts
-const mutableTransform = Transform.getMutable(myEntity)
+Full instructions for running the proxy server can be found here Instructions here [https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme](https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme)
+
+#### Run Decentraland Scene (seperate tab)
+
+**Install the CLI**
+
+Download and install the Decentraland CLI by running the following command:
+
+```bash
+npm i -g decentraland
 ```
+
+**Previewing the scene**
+
+Download this example and navigate to its directory, then run:
+
+```
+$:  dcl start
+```
+
+Any dependencies are installed and then the CLI opens the scene in a new browser tab.
+
+**Scene Usage**
+
+Click on the NPC to start a conversation, use E and F keys to choose options when prompted.
+
+Learn more about how to build your own scenes in our [documentation](https://docs.decentraland.org/) site.
+
+If something doesn’t work, please [file an issue](https://github.com/decentraland-scenes/Awesome-Repository/issues/new).
+
+## Copyright info
+
+This scene is protected with a standard Apache 2 licence. See the terms and conditions in the [LICENSE](/LICENSE) file.

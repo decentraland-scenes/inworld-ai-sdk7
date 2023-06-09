@@ -59,9 +59,9 @@ export class Config {
   DEBUG_UI_ANNOUNCE_ENABLED = DEBUG_FLAGS[ENV]
 
   DEBUG_SHOW_NPC_PATH = DEBUG_FLAGS[ENV] //if npc path is lit up
-  PATH_DEBUG: boolean = true
+  PATH_DEBUG: boolean = false
   USE_ANY_INPUT: boolean = false
-  EMOTION_DEBUG: boolean = true
+  EMOTION_DEBUG: boolean = false
 
 
   center!: Vector3
@@ -77,8 +77,6 @@ export class Config {
     this.COLYSEUS_ENDPOINT_NON_LOCAL = COLYSEUS_ENDPOINT_URL[env]
     this.COLYSEUS_ENDPOINT_LOCAL = COLYSEUS_ENDPOINT_URL[env]
     this.COLYSEUS_HTTP_ENDPOINT = COLYSEUS_ENDPOINT_URL[env].replace("wss://", "https://").replace("ws://", "http://")
-
-
   }
 }
 

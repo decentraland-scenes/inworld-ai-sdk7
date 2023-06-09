@@ -29,41 +29,38 @@ export function getNpcEmotion(emotion: ChatPart) {
   const activeNpc = REGISTRY.activeNPC;
 
   let npcData = (npcLib.getData(activeNpc.entity) as NPCData)
-  
+
   const defaultEmotion: NpcAnimationNameDef = {
-    portraitPath: REGISTRY.activeNPC.args.npcAnimations.IDLE.portraitPath,
-    name: REGISTRY.activeNPC.args.npcAnimations.IDLE.name,
+    portraitPath: REGISTRY.activeNPC.args.npcAnimations.TALK.portraitPath,
+    name: REGISTRY.activeNPC.args.npcAnimations.TALK.name,
     duration: 2
-  }
-  //FIXME if has no portrait what to we do????
-  if(!REGISTRY.activeNPC.args.npcAnimations.IDLE.portraitPath){
-    console.log("WARNING","getNpcEmotion","no portrait path")
   }
 
   if (!emotion) {
+    console.log("Emotions", "Return Default");
     return defaultEmotion
   }
 
   let result: NpcAnimationNameDef = undefined;
   switch (emotion.packet.emotions.behavior) {
     case EmotionBehaviorCode.JOY:
-      result = activeNpc.args.npcAnimations.HAPPY
+      if (activeNpc.args.npcAnimations.HAPPY) result = activeNpc.args.npcAnimations.HAPPY
       break
-    case EmotionBehaviorCode.AFFECTION:
-      result = activeNpc.args.npcAnimations.HEART_WITH_HANDS
-      break
-    case EmotionBehaviorCode.STONEWALLING:
-      result = activeNpc.args.npcAnimations.COME_ON
-      break
+    // case EmotionBehaviorCode.AFFECTION:
+    //   if (activeNpc.args.npcAnimations.HEART_WITH_HANDS) result = activeNpc.args.npcAnimations.HEART_WITH_HANDS
+    //   break
+    // case EmotionBehaviorCode.STONEWALLING:
+    //   if (activeNpc.args.npcAnimations.COME_ON) result = activeNpc.args.npcAnimations.COME_ON
+    //   break
     case EmotionBehaviorCode.HUMOR:
     case EmotionBehaviorCode.TENSE_HUMOR:
-      result = activeNpc.args.npcAnimations.LAUGH
+      if (activeNpc.args.npcAnimations.LAUGH) result = activeNpc.args.npcAnimations.LAUGH
       break
     case EmotionBehaviorCode.SADNESS:
-      result = activeNpc.args.npcAnimations.SAD
+      if (activeNpc.args.npcAnimations.SAD) result = activeNpc.args.npcAnimations.SAD
       break
     case EmotionBehaviorCode.SURPRISE:
-      result = activeNpc.args.npcAnimations.SURPRISE
+      if (activeNpc.args.npcAnimations.SURPRISE) result = activeNpc.args.npcAnimations.SURPRISE
       break
   }
   result = result ? result : defaultEmotion

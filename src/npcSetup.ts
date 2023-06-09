@@ -1,15 +1,13 @@
 import * as npcLib from 'dcl-npc-toolkit'
-import { NpcAnimationNameType, REGISTRY, deactivateNPC } from './registry'
+import { NpcAnimationNameType, REGISTRY } from './registry'
 import { RemoteNpc, hideThinking } from './remoteNpc'
 import { FollowPathData } from 'dcl-npc-toolkit/dist/types'
 import { Color4, Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
 import { genericPrefinedQuestions } from './NPCs/customUIFunctionality'
 import { closeCustomUI, openCustomUI } from './NPCs/customUi'
-import { ColliderLayer, Material, MeshRenderer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
-import { CONFIG, Config } from './config'
-import * as ui from 'dcl-ui-toolkit'
-import { ChatPart } from './streamedMsgs'
+import { ColliderLayer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
+import { CONFIG } from './config'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -22,6 +20,10 @@ const DOGE_NPC_ANIMATIONS: NpcAnimationNameType = {
   THINKING: { name: "Thinking", duration: 5 },
   RUN: { name: "Run", duration: -1 },
   WAVE: { name: "Wave", duration: 4 + ANIM_TIME_PADD },
+  LAUGH: { name: "Laugh", duration: 2, autoStart: undefined },
+  HAPPY: { name: "Happy", duration: 2, autoStart: undefined },
+  SAD: { name: "Sad", duration: 2, autoStart: undefined },
+  SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined }
 }
 
 const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
@@ -36,18 +38,11 @@ const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
   SURPRISE: { name: "Surprise", duration: 2, autoStart: undefined, portraitPath: "images/portraits/simone/surprise1.png" },
 }
 
-
-
-
-let npcBluntBobby: RemoteNpc
-
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  createDogeNpc() 
+  createDogeNpc()
   createSimonas()
-
-  if (npcBluntBobby) REGISTRY.allNPCs.push(npcBluntBobby)
 
   for (const p of REGISTRY.allNPCs) {
     //TODO: Set Display text to center
@@ -93,7 +88,7 @@ function createDogeNpc() {
       npcData: {
         type: npcLib.NPCType.CUSTOM,
         model: {
-          src:'models/dogeNPC_anim4.glb',
+          src: 'models/dogeNPC_anim4.glb',
           //visibleMeshesCollisionMask: ColliderLayer.CL_POINTER | ColliderLayer.CL_PHYSICS,
           //invisibleMeshesCollisionMask: ColliderLayer.CL_NONE,
         },//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
@@ -107,9 +102,7 @@ function createDogeNpc() {
           hideThinking(doge)
           if (REGISTRY.activeNPC === doge) REGISTRY.activeNPC = undefined
           const LOOP = false
-
           npcLib.followPath(doge.entity, dogePathData)
-          // if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
         },
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
         walkingAnim: DOGE_NPC_ANIMATIONS.WALK.name,
@@ -144,16 +137,12 @@ function createDogeNpc() {
         openCustomUI()
       }
       , onEndOfInteraction: () => {
-        // const LOOP = false
-        // if (doge.npcAnimations.WALK) npcLib.playAnimation(doge.entity, doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
-        // npcLib.followPath(doge.entity, dogePath)
-      }
+      },
+      predefinedQuestions: genericPrefinedQuestions
     }
   )
   doge.name = "npc.doge"
-  doge.predefinedQuestions = genericPrefinedQuestions
   npcLib.followPath(doge.entity, dogePathData)
-  //doge.showThinking(true)
 
   REGISTRY.allNPCs.push(doge)
 }
@@ -165,39 +154,15 @@ function createSimonas() {
     {
       transformData: { position: Vector3.create(6, 0, 6), scale: Vector3.create(1, 1, 1) },
       npcData: {
-        type: npcLib.NPCType.CUSTOM, 
+        type: npcLib.NPCType.CUSTOM,
         model: {
-          src:'models/Simone_Anim_Collider.glb',
+          src: 'models/Simone_Anim_Collider.glb',
           visibleMeshesCollisionMask: ColliderLayer.CL_NONE,
           invisibleMeshesCollisionMask: ColliderLayer.CL_POINTER | ColliderLayer.CL_PHYSICS
         },//'models/Simone_Anim.glb',
         onActivate: () => {
           console.log('simonas.NPC activated!')
-
-          // npcLib.talk(simonas.entity, 
-          //   [
-          //     {
-          //       text: 'happy1',
-          //       portrait: {
-          //         path: 'images/portraits/simone/happy1.png'
-          //       }
-          //     },
-          //     {
-          //       text: 'idle1',
-          //       portrait: {
-          //         path: 'images/portraits/simone/idle1.png'
-          //       }
-          //     },
-          //     {
-          //       text: 'sad1',
-          //       portrait: {
-          //         path: 'images/portraits/simone/sad1.png'
-          //       } 
-          //     },
-          // ])
-
           connectNpcToLobby(REGISTRY.lobbyScene, simonas)
-          // if (simonas.npcAnimations.HI) npcLib.playAnimation(simonas.entity, simonas.npcAnimations.HI.name, true, simonas.npcAnimations.HI.duration)
         },
         onWalkAway: () => {
           closeCustomUI(false)//already in walkaway dont trigger second time
@@ -238,12 +203,12 @@ function createSimonas() {
       , onEndOfRemoteInteractionStream: () => {
         openCustomUI()
       }
-      , onEndOfInteraction: () => { }
+      , onEndOfInteraction: () => { },
+      predefinedQuestions: genericPrefinedQuestions
     }
   )
 
   simonas.name = "npc.simonas"
-  simonas.predefinedQuestions = genericPrefinedQuestions
   REGISTRY.allNPCs.push(simonas)
 }
 

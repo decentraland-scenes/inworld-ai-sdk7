@@ -40,6 +40,7 @@ export type RemoteNpcOptions = {
   thinking?: RemoteNpcThinkingOptions
   onEndOfRemoteInteractionStream: () => void
   onEndOfInteraction: () => void
+  predefinedQuestions: NpcQuestionData[]
 }
 
 export class RemoteNpc {
@@ -78,6 +79,8 @@ export class RemoteNpc {
 
       this.onEndOfRemoteInteractionStream = inArgs.onEndOfRemoteInteractionStream
       this.onEndOfInteraction = inArgs.onEndOfInteraction
+
+      this.predefinedQuestions = this.args.predefinedQuestions
     }
 
     createThinkingEnities(this)

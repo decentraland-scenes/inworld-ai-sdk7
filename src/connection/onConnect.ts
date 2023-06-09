@@ -222,7 +222,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
 
           let emotion = getNpcEmotion(nextPart.emotion)
 
-          if(emotion.portraitPath) dialog.portrait = { path: emotion.portraitPath }
+          if (hasEmotion && emotion.portraitPath) dialog.portrait = { path: emotion.portraitPath }
           console.log('Emotions', 'Portrait:', dialog.portrait);
 
           if (hasEmotion) {
@@ -232,9 +232,11 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
           }
 
           talk(REGISTRY.activeNPC.entity, [nextDialog]);
+          console.log("Emotions", "Dialog", nextDialog);
+
 
           console.log('Emotions', 'Animation:', emotion.name);
-          playAnimation(REGISTRY.activeNPC.entity, emotion.name, true, emotion.duration)
+          if (hasEmotion && emotion.name) playAnimation(REGISTRY.activeNPC.entity, emotion.name, true, emotion.duration)
 
           if (true) {//audio optional
             if (nextPart.audio && nextPart.audio.packet.audio.chunk) {
@@ -324,7 +326,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
 
       let emotion = getNpcEmotion(nextPart.emotion)
 
-      if(emotion.portraitPath) dialog.portrait = { path: emotion.portraitPath }
+      if (hasEmotion && emotion.portraitPath) dialog.portrait = { path: emotion.portraitPath }
       console.log('Emotions', 'Portrait:', dialog.portrait);
 
       if (hasEmotion) {
@@ -334,8 +336,10 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       }
       if (dialog) {
         talk(REGISTRY.activeNPC.entity, [dialog]);
-        console.log('Emotions', 'Animation', dialog.portrait);
-        playAnimation(REGISTRY.activeNPC.entity, emotion.name, true, emotion.duration)
+        console.log("Emotions", "Dialog", dialog);
+
+        console.log('Emotions', 'Animation', dialog.name);
+        if (hasEmotion && emotion.name) playAnimation(REGISTRY.activeNPC.entity, emotion.name, true, emotion.duration)
       } else {
         console.log("structuredMsg", "createDialog", "no dialog to show,probably just a control msg", dialog, "chatPart", chatPart, "nextPart", nextPart)
       }
