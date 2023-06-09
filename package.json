@@ -7,7 +7,7 @@
     "build:ci": "sdk-commands build",
     "deploy:prod": "sdk-commands deploy",
     "deploy:testing": "sdk-commands deploy --target peer-testing.decentraland.org",
-    "deploy:test-world": "sdk-commands deploy --target-content https://worlds-content-server.decentraland.org",
+    "deploy:test-world": "sdk-commands deploy --target-content https://worlds-content-server.decentraland.zone",
     "deploy": "sdk-commands deploy",
     "build": "sdk-commands build",
     "upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
