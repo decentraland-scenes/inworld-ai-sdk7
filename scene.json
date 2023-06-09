@@ -55,5 +55,8 @@
 		"rnd-colyseus-service.decentraland.org",
 		"127.0.0.1"
 	],
-	"featureToggles": {}
+	"featureToggles": {},
+	"worldConfiguration" : {
+	    "name": "inworldaisdk7.dcl.eth"
+	}
 }
