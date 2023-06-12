@@ -315,7 +315,8 @@ function sendTypeQuestion() {
 
 export function resetInputField() {}
 
-
+/*
+for quicker debug editing
 export const genericPrefinedQuestions: NpcQuestionData[] = [
   { displayText: "Sing me a song!", aiQuery: "Sing me a song!" },
   { displayText: "Recite me a poem!", aiQuery: "Recite me a poem!" },
@@ -330,4 +331,4 @@ export const genericPrefinedQuestions: NpcQuestionData[] = [
 selectedPredefinedQuestion = genericPrefinedQuestions 
 
 
-setVisibility(true)
+setVisibility(true)*/
