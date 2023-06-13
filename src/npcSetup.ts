@@ -41,7 +41,7 @@ const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  createDogeNpc()
+  //createDogeNpc()
   createSimonas()
 
   for (const p of REGISTRY.allNPCs) {

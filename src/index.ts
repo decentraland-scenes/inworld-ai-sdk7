@@ -1,4 +1,4 @@
-import { engine, MeshRenderer, Transform } from '@dcl/sdk/ecs'
+import { engine, MeshRenderer, MeshCollider, Transform } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
 import { initRegistery, REGISTRY } from './registry'
 import { initDialogs } from './waitingDialog'
@@ -10,6 +10,26 @@ import "./polyfill/delcares";
 import { initConfig } from './config'
 import { setUpUI as setupUI } from './ui'
 import { initIdleStateChangedObservable, onIdleStateChangedObservableAdd } from './back-ports/onIdleStateChangedObservables'
+import { movePlayerTo } from '~system/RestrictedActions'
+import { skyboxPZ } from './skybox/skybox'
+import { height, sceneSizeX, sceneSizeZ } from './skybox/resources'
+
+
+//#region skybox
+export function main() {
+  Transform.getMutable(skyboxPZ)
+} 
+
+let testPlatform = engine.addEntity()
+Transform.create(testPlatform, {
+    position: Vector3.create(sceneSizeX/2,height/2,sceneSizeZ/2),
+    scale: Vector3.create(16,1,16)
+})
+MeshCollider.setBox(testPlatform)
+
+movePlayerTo({newRelativePosition: Vector3.create(sceneSizeX/2,height/2 + 5,sceneSizeZ/2)})
+//#endregion
+
 
 // export all the functions required to make the scene work
 export * from '@dcl/sdk'
