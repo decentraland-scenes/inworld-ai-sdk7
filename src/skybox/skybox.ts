@@ -1,6 +1,7 @@
 import {  InputAction, Material, MeshCollider, MeshRenderer, PointerEventType, PointerEvents, Transform, engine, inputSystem } from "@dcl/sdk/ecs";
 import {  Vector3 , Quaternion} from "@dcl/sdk/math";
 import { height, radiusMultiplier, sceneSizeX, sceneSizeZ } from "./resources";
+import { movePlayerTo } from "~system/RestrictedActions";
 
 
 //#region SkyBox
@@ -98,21 +99,18 @@ Material.setBasicMaterial(skyboxNX, {
       src: "images/skybox/"+ folderNumber +"/nx.png" 
     })
   })
-//#endregion
+  
+const transform = Transform.getMutable(engine.PlayerEntity)
+Transform.getMutable(skyboxRoot).position = transform.position
+
+//#endregion 
+
 
 /*
-PointerEvents.create(testPlatform, { pointerEvents: [
-  {
-    eventInfo: {button: InputAction.IA_PRIMARY, maxDistance: 100, hoverText: "GO Up"},
-    eventType: PointerEventType.PET_DOWN
-  },
-  
-]})*/
-
 engine.addSystem(() => {
   const meshEntities = engine.getEntitiesWith(MeshCollider)
   for (const [entity] of meshEntities) {
-    
+     
 
       if (inputSystem.isTriggered(InputAction.IA_PRIMARY, PointerEventType.PET_DOWN, entity)) {
       const transform = Transform.getMutable(engine.PlayerEntity)
@@ -123,9 +121,7 @@ engine.addSystem(() => {
 })
 
 engine.addSystem(() => {
-  
   Transform.getMutable(skyboxRoot).position = Transform.get(engine.PlayerEntity).position
-})
-
-
+  console.log("dio")
+})*/ 
   
