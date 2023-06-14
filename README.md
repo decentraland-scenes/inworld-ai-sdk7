@@ -122,6 +122,9 @@ Full instructions for running the proxy server can be found here Instructions he
 
 #### Run Decentraland Scene (seperate tab)
 
+[https://docs.decentraland.org/creator/development-guide/sdk7/cli/](https://docs.decentraland.org/creator/development-guide/sdk7/cli/)
+[https://docs.decentraland.org/creator/development-guide/sdk7/preview-scene/](https://docs.decentraland.org/creator/development-guide/sdk7/preview-scene/)
+
 **Install the CLI**
 
 Download and install the Decentraland CLI by running the following command:
@@ -135,7 +138,7 @@ npm i -g decentraland
 Download this example and navigate to its directory, then run:
 
 ```
-$:  dcl start
+$:  npm run start
 ```
 
 Any dependencies are installed and then the CLI opens the scene in a new browser tab.
