@@ -9,7 +9,7 @@ const folderNumber = "1"
 
 //root
 export let skyboxRoot = engine.addEntity()
-Transform.create(skyboxRoot)
+Transform.create(skyboxRoot, {position: Vector3.create(sceneSizeX/2,height/2,sceneSizeZ/2)})
 
 //front
 export let skyboxPZ = engine.addEntity()
@@ -100,13 +100,13 @@ Material.setBasicMaterial(skyboxNX, {
     })
   })
   
-const transform = Transform.getMutable(engine.PlayerEntity)
-Transform.getMutable(skyboxRoot).position = transform.position
-
-//#endregion 
-
-
-/*
+  
+  //#endregion 
+  
+  
+  /*
+  const transform = Transform.getMutable(engine.PlayerEntity)
+  Transform.getMutable(skyboxRoot).position = transform.position
 engine.addSystem(() => {
   const meshEntities = engine.getEntitiesWith(MeshCollider)
   for (const [entity] of meshEntities) {
