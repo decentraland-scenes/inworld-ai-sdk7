@@ -153,7 +153,7 @@ function createSimonas() {
   simonas = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/simone" },
     {
-      transformData: { position:  Vector3.create(sceneSizeX/2 + 3 ,height/2 + 0.5,sceneSizeZ/2), scale: Vector3.create(1, 1,  1), rotation: Quaternion.create(0, -1, 0) },
+      transformData: { position:  Vector3.create(sceneSizeX/2 + 3 ,height/2 + -2,sceneSizeZ/2), scale: Vector3.create(1, 1,  1), rotation: Quaternion.create(0, -1, 0) },
       npcData: {
         type: npcLib.NPCType.CUSTOM, 
         model: {
