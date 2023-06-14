@@ -74,7 +74,7 @@ GltfContainer.create(base, {
 })
 Transform.create(base, {
   position: Vector3.create(sceneSizeX/2,height/2,sceneSizeZ/2),
-  scale: Vector3.create(1.6,1.6,1),
+  scale: Vector3.create(1.6,1.6,1.95),
   rotation: Quaternion.create(0, 1, 0)
 })
 
