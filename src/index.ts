@@ -73,8 +73,8 @@ GltfContainer.create(base, {
   src: "models/platform/base.glb"
 })
 Transform.create(base, {
-  position: Vector3.create(sceneSizeX/2,height/2 - 2.6,sceneSizeZ/2),
-  scale: Vector3.create(1,1,1),
+  position: Vector3.create(sceneSizeX/2,height/2,sceneSizeZ/2),
+  scale: Vector3.create(1.6,1.6,1),
   rotation: Quaternion.create(0, 1, 0)
 })
 
@@ -87,7 +87,7 @@ Transform.create(clickableEntity, {position: Vector3.create(sceneSizeX/2, 1, sce
 pointerEventsSystem.onPointerDown(
   clickableEntity,
   function () {
-    movePlayerTo({newRelativePosition: Vector3.create(sceneSizeX/2,height/2 + 5,sceneSizeZ/2)})
+    movePlayerTo({newRelativePosition: Vector3.create(sceneSizeX/2,height/2 + 2,sceneSizeZ/2)})
   },
   {
     button: InputAction.IA_POINTER,
@@ -113,11 +113,10 @@ function SimpleRotate() {
 	transform.rotation = Quaternion.multiply(transform.rotation, Quaternion.fromAngleAxis(0.05, Vector3.Forward()))
 
   let transform2 = Transform.getMutable(ring2)
-	transform2.rotation = Quaternion.multiply(transform2.rotation, Quaternion.fromAngleAxis(-0.3, Vector3.Forward()))
+	transform2.rotation = Quaternion.multiply(transform2.rotation, Quaternion.fromAngleAxis(-0.5, Vector3.Forward()))
 
   let transform3 = Transform.getMutable(ring3)
-	transform3.rotation = Quaternion.multiply(transform3.rotation, Quaternion.fromAngleAxis(0.7, Vector3.Forward()))
-
+	transform3.rotation = Quaternion.multiply(transform3.rotation, Quaternion.fromAngleAxis(1, Vector3.Forward()))
 }
 
 engine.addSystem(SimpleRotate)
