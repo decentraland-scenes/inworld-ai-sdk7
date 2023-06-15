@@ -15,19 +15,12 @@ import { skyboxPZ, skyboxRoot } from './skybox/skybox'
 import { height, sceneSizeX, sceneSizeZ } from './skybox/resources'
 
 
-//#region skybox
+//reference to skybox if delated skybox won't work (this is for every script that is not referenced in index.ts)
 export function main() {
   Transform.getMutable(skyboxPZ)
 }
-/*
-let testPlatform = engine.addEntity()
-Transform.create(testPlatform, {
-  position: Vector3.create(sceneSizeX/2,height/2,sceneSizeZ/2),
-  scale: Vector3.create(16,1,16)
-})
-MeshCollider.setBox(testPlatform)*/
  
-
+//#region platform models
 let ring = engine.addEntity()
 GltfContainer.create(ring, { 
   src: "models/platform/ring.glb"
@@ -78,6 +71,20 @@ Transform.create(base, {
   rotation: Quaternion.create(0, 1, 0)
 })
 
+function SimpleRotate() {
+	let transform = Transform.getMutable(ring)
+	transform.rotation = Quaternion.multiply(transform.rotation, Quaternion.fromAngleAxis(0.05, Vector3.Forward()))
+
+  let transform2 = Transform.getMutable(ring2)
+	transform2.rotation = Quaternion.multiply(transform2.rotation, Quaternion.fromAngleAxis(-0.5, Vector3.Forward()))
+
+  let transform3 = Transform.getMutable(ring3)
+	transform3.rotation = Quaternion.multiply(transform3.rotation, Quaternion.fromAngleAxis(1, Vector3.Forward()))
+}
+
+engine.addSystem(SimpleRotate)
+//#endregion
+
 //TELEPORT
 const clickableEntity = engine.addEntity()
 MeshRenderer.setBox(clickableEntity)
@@ -91,7 +98,7 @@ pointerEventsSystem.onPointerDown(
   },
   {
     button: InputAction.IA_POINTER,
-    hoverText: 'Click'
+    hoverText: 'Click Me'
   }
 )
 
@@ -99,27 +106,11 @@ pointerEventsSystem.onPointerDown(
 
 
 
-//#endregion
 
 
 
 
 
-
-
-
-function SimpleRotate() {
-	let transform = Transform.getMutable(ring)
-	transform.rotation = Quaternion.multiply(transform.rotation, Quaternion.fromAngleAxis(0.05, Vector3.Forward()))
-
-  let transform2 = Transform.getMutable(ring2)
-	transform2.rotation = Quaternion.multiply(transform2.rotation, Quaternion.fromAngleAxis(-0.5, Vector3.Forward()))
-
-  let transform3 = Transform.getMutable(ring3)
-	transform3.rotation = Quaternion.multiply(transform3.rotation, Quaternion.fromAngleAxis(1, Vector3.Forward()))
-}
-
-engine.addSystem(SimpleRotate)
 
 
 
