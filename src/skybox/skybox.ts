@@ -5,7 +5,7 @@ import { movePlayerTo } from "~system/RestrictedActions";
 
 
 //#region SkyBox
-const folderNumber = "1"
+const folderNumber = "2"
 
 //root
 export let skyboxRoot = engine.addEntity()
