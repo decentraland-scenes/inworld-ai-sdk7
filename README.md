@@ -1,6 +1,6 @@
 # InWorld.ai Example
 
-This is an example scene to create AI NPCs SDL7 backed by [InWorlds.ai](https://inworld.ai/arcade) service
+This is an example scene to create AI NPCs SDK7 backed by [InWorlds.ai](https://inworld.ai/arcade) service
 
 Deployed here
 
