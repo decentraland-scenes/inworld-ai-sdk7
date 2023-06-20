@@ -1,6 +1,6 @@
-# InWorld.ai Example
+# Inworld.ai Example
 
-This is an example scene to create AI NPCs SDK7 backed by [InWorlds.ai](https://inworld.ai/arcade) service
+This is an example scene to create AI NPCs SDK7 backed by [Inworlds.ai](https://inworld.ai/arcade) service
 
 Deployed here
 
@@ -13,10 +13,10 @@ RemoteNpc (`src/remoteNpc.ts`) is a new class that wraps the existing NPC object
 
 It adds the additional configuration for an NPC that talks to a remote server for the dialog.
 
-StreamedMessage (`src/streamedMsgs.ts`) is a utilty that implements an Iterator pattern to enable the scene to group messages from InWorld and use them with the NPC Dialog in a serial and squential way.
+StreamedMessage (`src/streamedMsgs.ts`) is a utilty that implements an Iterator pattern to enable the scene to group messages from Inworld and use them with the NPC Dialog in a serial and squential way.
 
 ```
-received stream of all InWorld messages all at once
+received stream of all Inworld messages all at once
 show utterance1
 player clicks next
 show utterance2
@@ -60,7 +60,7 @@ const COLYSEUS_ENDPOINT_URL: Record<string, string> = {
 
 ```
 
-### Should you make your own InWorld Scene and Characters
+### Should you make your own Inworld Scene and Characters
 
 src/npcSetup.ts
 
