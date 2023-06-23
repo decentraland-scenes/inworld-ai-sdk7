@@ -12,7 +12,7 @@ export let skyboxRoot = engine.addEntity()
 Transform.create(skyboxRoot, {position: Vector3.create(sceneSizeX/2,height/2,sceneSizeZ/2)})
 
 //front
-export let skyboxPZ = engine.addEntity()
+export let skyboxPZ = engine.addEntity() 
 Transform.create(skyboxPZ, {
     position: Vector3.create(0, 0, sceneSizeZ/2 * radiusMultiplier),
     scale: Vector3.create(sceneSizeX * radiusMultiplier,height * radiusMultiplier,sceneSizeZ * radiusMultiplier),

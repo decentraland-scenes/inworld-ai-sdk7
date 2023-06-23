@@ -23,14 +23,14 @@ export function main() {
 //#region platform models
 let ring = engine.addEntity()
 GltfContainer.create(ring, { 
-  src: "models/platform/ring.glb"
+  src: "models/platform/platform_02.glb"
 }) 
 Transform.create(ring, {
-  position: Vector3.create(sceneSizeX/2 + 6,height/2 - 0.5,sceneSizeZ/2),
-  scale: Vector3.create(1,1,1),
+  position: Vector3.create(sceneSizeX/2 ,height/2 - 3,sceneSizeZ/2),
+  scale: Vector3.create(2,2,2),
   rotation: Quaternion.create(0, 1, 0)
 })
-
+/*
 let ring2 = engine.addEntity()
 GltfContainer.create(ring2, { 
   src: "models/platform/ring.glb"
@@ -84,6 +84,7 @@ function SimpleRotate() {
 
 engine.addSystem(SimpleRotate)
 //#endregion
+*/
 
 //TELEPORT
 const clickableEntity = engine.addEntity()
