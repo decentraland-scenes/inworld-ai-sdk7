@@ -2,12 +2,13 @@ import * as npcLib from 'dcl-npc-toolkit'
 import { NpcAnimationNameType, REGISTRY } from './registry'
 import { RemoteNpc, hideThinking } from './remoteNpc'
 import { FollowPathData } from 'dcl-npc-toolkit/dist/types'
-import { Color4, Vector3 } from '@dcl/sdk/math'
+import { Color4, Quaternion, Vector3 } from '@dcl/sdk/math'
 import { connectNpcToLobby } from './lobby-scene/lobbyScene'
 import { genericPrefinedQuestions } from './NPCs/customUIFunctionality'
 import { closeCustomUI, openCustomUI } from './NPCs/customUi'
 import { ColliderLayer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
 import { CONFIG } from './config'
+import { height, sceneSizeX, sceneSizeZ } from './skybox/resources'
 
 const FILE_NAME: string = "npcSetup.ts"
 
@@ -41,7 +42,7 @@ const SIMONAS_NPC_ANIMATIONS: NpcAnimationNameType = {
 export function setupNPC() {
   console.log("setupNPC", "ENTRY")
 
-  createDogeNpc()
+  //createDogeNpc()
   createSimonas()
 
   for (const p of REGISTRY.allNPCs) {
@@ -152,9 +153,9 @@ function createSimonas() {
   simonas = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/simone" },
     {
-      transformData: { position: Vector3.create(6, 0, 6), scale: Vector3.create(1, 1, 1) },
+      transformData: { position:  Vector3.create(sceneSizeX/2 + 2.5 ,height/2 + -2.3,sceneSizeZ/2), scale: Vector3.create(1, 1,  1), rotation: Quaternion.create(0, -1, 0) },
       npcData: {
-        type: npcLib.NPCType.CUSTOM,
+        type: npcLib.NPCType.CUSTOM, 
         model: {
           src: 'models/Simone_Anim_Collider.glb',
           visibleMeshesCollisionMask: ColliderLayer.CL_NONE,
